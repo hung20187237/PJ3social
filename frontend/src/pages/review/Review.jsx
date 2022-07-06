@@ -24,40 +24,33 @@ export default function Review() {
   const tag1 = useRef();
   const tag2 = useRef();
   const tag3 = useRef();
-  const [file, setFile] = useState('');
+  const [mutifile, setMutifile] = useState('');
 
-  useEffect(()=> { 
-    console.log(file);
-  }, [file])
 
   const submitHandler = async (e) => {
     e.preventDefault();
     
-    
     const newPost = {
-      userId: user._id,
-      desc: desc.current.getContent(),
-      title: title.current.value,
-      rating: rating.current,
-      reqFiles: [],
-      place: place.current.value,
-      tag : `$${[tag1.current.value, tag2.current.value, tag3.current.value]}`
+        userId: user._id,
+        desc: desc.current.getContent(),
+        title: title.current.value,
+        rating: rating.current,
+        reqFiles: [],
+        place: place.current.value,
+        tag : `$${[tag1.current.value, tag2.current.value, tag3.current.value]}`
     };
-
-   
-    for(const key of Object.keys(file)){
-        if (file[key]) {
-        const fileName = Date.now() + file[key].name;
+    if (mutifile) {
         const data = new FormData();
+        const fileName = Date.now() + mutifile.name;
         data.append("name", fileName);
-        data.append("file", file[key]);
+        for(var i =0; i < mutifile.length; i++){
+            data.append("file", mutifile[i]);
+        }
         newPost.img = fileName;
-        // newPost.img.push(fileName);
         console.log(newPost);
         try {
             await axios.post("http://localhost:8800/middleware/upload", data);
         } catch (err) {}
-        }
     }
     try {
         await axios.post("http://localhost:8800/api/post", newPost);
@@ -72,12 +65,9 @@ export default function Review() {
      }
    };
 
-    
-   const handleChooseImage = (files) => {
-    const listImg = Object.values(files);
-    console.log(listImg);
-   setFile(listImg);
-   }
+ const MutipleFileChange = (e) => {
+    setMutifile(e.target.files);
+ }
 
   return (
     <div className="review">
@@ -119,15 +109,15 @@ export default function Review() {
                         </div>
                     </div>
                     <hr className="reviewHr" />
-                    {file && (
+                    {mutifile && (
                     <div className="reviewImgContainer">
 
                         {
-                            file.map((img) => 
+                            mutifile.map((img) => 
                             <img className="reviewImg" src={URL.createObjectURL(img)} alt="" />
                             )
                         }
-                        <CancelIcon className="reviewCancelImg" onClick={() => setFile(null)} />
+                        <CancelIcon className="reviewCancelImg" onClick={() => setMutifile(null)} />
                     </div>
                     )}
                     <form className="reviewBottom" onSubmit={submitHandler}>
@@ -144,7 +134,7 @@ export default function Review() {
                                     accept=".png,.jpeg,.jpg"
                                     onChange={(e) => {
                                         console.log(e.target.files);             
-                                        handleChooseImage(e.target.files)
+                                        MutipleFileChange(e)
                                         
                                     }}
                                 />

@@ -44,26 +44,17 @@ const storage = multer.diskStorage({
   },
 });
 
-// const upload = multer({ storage: storage });
-// app.post("/api/upload", upload.single("file"), (req, res) => {
-//   try {
-//     return res.status(200).json("File uploded successfully");
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
-
-const reqFiles = [];
-const mutiupload = multer({ storage: storage });
-
-app.post("/middleware/upload", mutiupload.array("file",12), async (req, res) => {
-  const URL = req.protocol + '://' + req.get('host')
-  for (var i = 0; i < req.files.length; i++){
-    reqFiles.push(URL + "public/images" + req.files[i].filename)
+const upload = multer({ storage: storage });
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  try {
+    return res.status(200).json("File uploded successfully");
+  } catch (error) {
+    console.error(error);
   }
-  const post = new Post({
-    img: reqFiles
-  })
+});
+
+const mutiupload = multer({ storage: storage })
+app.post("/api/mutiupload", mutiupload.array("file",12), async (req, res) => {
   try {
     return res.status(200).json("File uploded successfully");
   } catch (error) {
