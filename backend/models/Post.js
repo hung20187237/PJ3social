@@ -22,7 +22,13 @@ const PostSchema = new mongoose.Schema(
       type: String,
       max: 100,
     },
-    tag: {
+    tagkv: {
+      type: String,
+    },
+    tagtc: {
+      type: String,
+    },
+    tagdm: {
       type: String,
     },
     rating: {

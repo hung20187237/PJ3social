@@ -21,9 +21,9 @@ export default function Review() {
   const title = useRef();
   const rating = useRef(4);
   const place = useRef();
-  const tag1 = useRef();
-  const tag2 = useRef();
-  const tag3 = useRef();
+  const tagkv = useRef();
+  const tagtc = useRef();
+  const tagdm = useRef();
   const [mutifile, setMutifile] = useState('');
 
 
@@ -35,9 +35,10 @@ export default function Review() {
         desc: desc.current.getContent(),
         title: title.current.value,
         rating: rating.current,
-        reqFiles: [],
         place: place.current.value,
-        tag : `$${[tag1.current.value, tag2.current.value, tag3.current.value]}`
+        tagkv: tagkv.current.value,
+        tagtc: tagtc.current.value,
+        tagdm: tagdm.current.value,
     };
     if (mutifile) {
         const data = new FormData();
@@ -46,10 +47,10 @@ export default function Review() {
         for(var i =0; i < mutifile.length; i++){
             data.append("file", mutifile[i]);
         }
-        newPost.img = fileName;
+        newPost.img = Object.values(fileName);
         console.log(newPost);
         try {
-            await axios.post("http://localhost:8800/middleware/upload", data);
+            await axios.post("http://localhost:8800/api/mutiupload", data);
         } catch (err) {}
     }
     try {
@@ -65,8 +66,10 @@ export default function Review() {
      }
    };
 
- const MutipleFileChange = (e) => {
-    setMutifile(e.target.files);
+ const MutipleFileChange = (files) => {
+    const listImg = Object.values(files);
+    console.log(listImg);
+    setMutifile(listImg);
  }
 
   return (
@@ -113,9 +116,9 @@ export default function Review() {
                     <div className="reviewImgContainer">
 
                         {
-                            mutifile.map((img) => 
+                            mutifile.length > 1 ? mutifile.map((img) => 
                             <img className="reviewImg" src={URL.createObjectURL(img)} alt="" />
-                            )
+                            ):null
                         }
                         <CancelIcon className="reviewCancelImg" onClick={() => setMutifile(null)} />
                     </div>
@@ -134,7 +137,7 @@ export default function Review() {
                                     accept=".png,.jpeg,.jpg"
                                     onChange={(e) => {
                                         console.log(e.target.files);             
-                                        MutipleFileChange(e)
+                                        MutipleFileChange(e.target.files)
                                         
                                     }}
                                 />
@@ -174,20 +177,20 @@ export default function Review() {
                             className="reviewInput"
                             ref={place}
                         />
-                        <input   class="reviewInput" list="Country" placeholder=" Khu Vực" ref={tag1}/>
+                        <input   class="reviewInput" list="Country" placeholder=" Khu Vực" ref={tagkv}/>
                             <datalist  id="Country">
                                 <option value="Quận Hà Đông"/>
                                 <option value="Quận Thanh Xuân"/>
                                 <option value="Quận Hoàn Kiếm"/>
                                 <option value="Quận Hai Bà Trưng"/>
-                                <option value="Quận Hoàng Mike"/>
+                                <option value="Quận Hoàng Mai"/>
                                 <option value="Quận Tây Hồ"/>
                                 <option value="Quận Cầu Giấy"/>
                                 <option value="Quận Long Biên"/>
                                 <option value="Quận Đống Đa"/>
                                 <option value="Quận Ba Đình"/>
                             </datalist>
-                        <input   class="reviewInput" list="Tieuchi" placeholder=" Tiêu Chí" ref={tag2}/>
+                        <input   class="reviewInput" list="Tieuchi" placeholder=" Tiêu Chí" ref={tagtc}/>
                             <datalist  id="Tieuchi">
                                 <option value="Hẹn hò"/>
                                 <option value="Sống ảo"/>
@@ -196,7 +199,7 @@ export default function Review() {
                                 <option value="Tiệc tùng"/>
                                 <option value="Tiết kiệm"/>
                             </datalist>
-                        <input   class="reviewInput" list="Danhmuc" placeholder=" Danh mục" ref={tag3}/>
+                        <input   class="reviewInput" list="Danhmuc" placeholder=" Danh mục" ref={tagdm}/>
                             <datalist  id="Danhmuc">
                                 <option value="Hải sản"/>
                                 <option value="Bún-Phở"/>

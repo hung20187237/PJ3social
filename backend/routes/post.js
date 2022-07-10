@@ -108,9 +108,9 @@ router.get("/profile/:username", async (req, res) => {
   }
 });
 //get all posts with tag
-router.get("/profile/:tag", async (req, res) => {
+router.get("/profile/:tagkv", async (req, res) => {
   try {
-    const posts = await Post.find({ tag: this.post.tag });
+    const posts = await Post.find({ tagkv: this.post.tagkv });
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);

@@ -16,7 +16,9 @@ import axios from "axios";
 export default function SearchPage() {
     const [posts, setPosts] = useState([]);
     const { user } = useContext(Context);
-
+    const [show,setShow]=useState(false)
+    const [show1,setShow1]=useState(false)
+    const [show2,setShow2]=useState(false)
     useEffect(() => {
         const fetchPosts = async () => {
          
@@ -28,7 +30,21 @@ export default function SearchPage() {
           );
         };
         fetchPosts();
-      }, [ user._id]);
+    }, [ user._id]);
+    const filterResult=(catitem)=>{
+        const result = posts.filter((curData)=>{
+            return curData.tagkv===catitem;
+
+        });
+        setPosts(result)
+    }
+    const filterResult1=(catitem)=>{
+        const result = posts.filter((curData)=>{
+            return curData.tagtc===catitem;
+
+        });
+        setPosts(result)
+    }
     const SearchSidebar = () => {
         return (
             <div className="searchsidebar">
@@ -40,39 +56,39 @@ export default function SearchPage() {
                     <div className='searchsidebar-top'>
                         <div className='search-top'>
                             <span>Khu vực</span>
-                            <ArrowDropDownIcon sx={{ fontSize: 40 }} />
+                            <ArrowDropDownIcon sx={{ fontSize: 40 }}  onClick={() => setShow1(!show1)}/>
                         </div>
-                        <div className='searchbody-top'>
+                        {show1&&<div className='searchbody-top'>
                             {SliderSlickData.map((slides, idx) => (
                                 <div className='searchbody-item'>
-                                    <span><input type="checkbox"/></span>
-                                    <span>Quận{slides.title}</span>
+                                    <span><input type="checkbox" value  onClick = {()=>filterResult(slides.title)}/></span>
+                                    <span>{slides.title}</span>
                                 </div>
                             ))}
-                        </div>
+                        </div>}
                     </div>
                     <div className='searchsidebar-between'>
                         <div className='search-between'>
                             <span>Tiêu Chí</span>
-                            <ArrowDropDownIcon sx={{ fontSize: 40 }} />
+                            <ArrowDropDownIcon sx={{ fontSize: 40 }}  onClick={() => setShow(!show)}/>
                         </div>
-                        <div className='searchbody-between'>
+                        {show&&<div className='searchbody-between'>
                             {SliderData.map((slide) => {
                                 return(
-                                    <div className='searchbody-item'>
-                                        <span><input type="checkbox"/></span>
+                                    <div className='searchbody-item' >
+                                        <span href="#"><input type="checkbox"  onClick = {()=>filterResult1(slide.title)}/></span>
                                         <span>{slide.title}</span>
                                     </div>
                                 );
                             })}
-                        </div>
+                        </div>}
                     </div>
                     <div className='searchsidebar-bottom'>
                         <div className='search-bottom'>
-                            <span>Tiêu Chí</span>
-                            <ArrowDropDownIcon sx={{ fontSize: 40 }} />
+                            <span>Danh mục</span>
+                            <ArrowDropDownIcon sx={{ fontSize: 40 }}  onClick={() => setShow2(!show2)}/>
                         </div>
-                        <div className='searchbody-bottom'>
+                        {show2&&<div className='searchbody-bottom'>
                             {CatologyData.map((list) => {
                                 return(
                                     <div className='searchbody-item'>
@@ -81,7 +97,7 @@ export default function SearchPage() {
                                     </div>
                                 );
                             })}
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>
