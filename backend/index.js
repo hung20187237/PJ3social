@@ -14,8 +14,8 @@ const commentRoute = require('./routes/comment')
 const messageRoute = require('./routes/message')
 const conversationRoute = require('./routes/conversation')
 const friendRequestRoute = require('./routes/friendRequest')
+const notificationRoute = require("./routes/notification");
 const path = require("path");
-const Post = require("./models/Post");
 
 
 dotenv.config();
@@ -74,6 +74,7 @@ app.use("/api/comment",commentRoute);
 app.use("/api/message",messageRoute);
 app.use("/api/conversation",conversationRoute);
 app.use("/api/friendRequest",friendRequestRoute);
+app.use("/api/notification", notificationRoute);;
 
 
 app.listen(8800, () => {
