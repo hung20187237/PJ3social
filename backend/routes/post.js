@@ -85,12 +85,13 @@ router.get("/timeline/:id", async (req, res) => {
       })
     );
     let post = userPosts.concat(...followingPosts).concat(...friendPosts)
-
+      
     //loai bo bai viet trung lap
-    let timelinePost = []
-    timelinePost = post.filter(function (item) {
-      return timelinePost.includes(item) ? '' : timelinePost.push(item)
-    })
+    let timelinePost = post;
+    // timelinePost = post.filter(function (item) {
+    //   return timelinePost.includes(item) ? '' : timelinePost.push(item)
+    // })
+    // console.log("postfaf: ",timelinePost)
     res.status(200).json(timelinePost);
   } catch (err) {
     res.status(500).json(err);

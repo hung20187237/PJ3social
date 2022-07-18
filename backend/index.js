@@ -36,13 +36,21 @@ app.use(morgan("common"));
 app.use(cors())
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images");
+  destination:(req, file, cb)=> {
+    cb(null, 'public/images')
   },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
+  filename:  (req, file, cb)=> {
+    cb(null, Date.now()+'_' +file.originalname)
+  }
+})
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "public/images");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, req.body.name);
+//   },
+// });
 
 const upload = multer({ storage: storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
@@ -54,9 +62,9 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 });
 
 const mutiupload = multer({ storage: storage })
-app.post("/api/mutiupload", mutiupload.array("file",12), async (req, res) => {
+app.post("/api/mutiupload", mutiupload.array("images",12), async (req, res) => {
   try {
-    return res.status(200).json("File uploded successfully");
+    return res.status(200).json({data:"File uploaded successfully",file:req.files});
   } catch (error) {
     console.log(error);
     if (error.code === "LIMIT_UNEXPECTED_FILE") {

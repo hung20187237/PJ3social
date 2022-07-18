@@ -55,6 +55,11 @@ const Reducer = (state, action) => {
             background: action.payload.background
           },
         };
+    case "NOTIFICATION":
+        return {
+          ...state,
+          notifyFlag: action.payload,
+        };
     default:
         return state;
     }

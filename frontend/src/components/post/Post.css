@@ -47,10 +47,13 @@
 .postCenter{
     margin: 20px 0;
 }
-
+.postcenterimg{
+  display: flex;
+  flex-wrap: wrap;
+}
 .postImg{
     margin-top: 20px;
-    width: 100%;
+    width: 50%;
     max-height: 500px;
     object-fit: contain;
 }

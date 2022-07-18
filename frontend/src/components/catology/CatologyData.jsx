@@ -30,7 +30,7 @@ export const CatologyData = [
     },
     {
       image:'https://statics.vinpearl.com/quan-nhau-can-tho-1_1632381868.jpg',
-      title: 'Quán nhậu'
+      title: 'Nhậu'
     },
     {
       image:'https://img.timviecdaubep.com/2020/04/T-Bone-Steak.jpg',

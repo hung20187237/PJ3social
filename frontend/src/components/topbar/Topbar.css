@@ -196,11 +196,13 @@
   z-index: 1;
   background-color: rgb(240, 193, 128);
   overflow-y: scroll;
+  box-shadow: 5px 5px rgba(0,0,0,.2);
 }
 
 .notificationAlertItem{
   background-color: white;
   padding: 10px;
+  border: 1px solid #ccc;
 }
 
 .notificationAlertItemDesc{

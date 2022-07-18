@@ -12,7 +12,7 @@ import { format } from "timeago.js";
 
 
 export default function Topbar(socket) {
-  const { user,dispatch } = useContext(Context);
+  const { user, dispatch, notifyFlag } = useContext(Context);
   const [notificationAlert, setNotificationAlert] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [countNewNotifications, setCountNewNotifications] = useState(-1);
@@ -21,6 +21,7 @@ export default function Topbar(socket) {
   const  usernameSearch = useRef();
   const scrollRef = useRef()
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+ 
 
   let navigate = useNavigate()
 
@@ -32,13 +33,15 @@ export default function Topbar(socket) {
         const getNotifications = async () => {
           try {
             const res = await axios.get("http://localhost:8800/api/notification/" + user._id);
-            setNotifications(res.data);
+            const data = [...res.data].reverse();
+            setNotifications(data);
+            setCountNewNotifications(res.data.length);
           } catch (err) {
             console.log(err);
           }
         };
         getNotifications();
-      }, []);
+      }, [notifyFlag]);
 
       useEffect(() => {
         socket.current?.on("getNotification", (data) => {
@@ -68,7 +71,6 @@ export default function Topbar(socket) {
             
             return (notification.sendUserName !== deletedValue.sendUserName && notification.type !== deletedValue.type) && notification !== deletedfriendRequestNotification
           }));
-          console.log(notifications)
       }, [deletedfriendRequestNotification]);
     
 
@@ -148,11 +150,12 @@ export default function Topbar(socket) {
       <div className='notificationAlert'>
             {notifications.map((notification)=> {
               let action;
+          
 
               if (notification.type === 1) {
                 action = "liked";
                 return (
-                  <div className="notificationAlertItem" ref={scrollRef}>
+                  <div className="notificationAlertItem" ref={scrollRef}>       
                   <span className="notificationAlertItemDesc">{`${notification.sendUserName} ${action} your post:  "${notification.post.substring(0,50)}..."`}</span>
                   <div className="notificationDate">{format(notification.createdAt)}</div>
                   </div>

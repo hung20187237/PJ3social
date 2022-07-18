@@ -14,37 +14,71 @@ import axios from "axios";
 
 
 export default function SearchPage() {
+    const [filterValue, setFilterValue] = useState({ kv: [], tc: [], dm: [] });
     const [posts, setPosts] = useState([]);
+    const [showPosts, setShowPosts] = useState([]);
     const { user } = useContext(Context);
-    const [show,setShow]=useState(false)
-    const [show1,setShow1]=useState(false)
-    const [show2,setShow2]=useState(false)
+    const [show, setShow] = useState(false)
+    const [show1, setShow1] = useState(false)
+    const [show2, setShow2] = useState(false)
     useEffect(() => {
         const fetchPosts = async () => {
-         
-          const res = await axios.get("http://localhost:8800/api/post/timeline/" + user._id);
-          setPosts(
-            res.data.sort((p1, p2) => {
-              return new Date(p2.createdAt) - new Date(p1.createdAt);
-            })
-          );
+            const res = await axios.get("http://localhost:8800/api/post/timeline/" + user._id);
+            setPosts(
+                res.data.sort((p1, p2) => {
+                    return new Date(p2.createdAt) - new Date(p1.createdAt);
+                })
+            );
+            setShowPosts(
+                res.data.sort((p1, p2) => {
+                    return new Date(p2.createdAt) - new Date(p1.createdAt);
+                })
+            );
         };
         fetchPosts();
-    }, [ user._id]);
-    const filterResult=(catitem)=>{
-        const result = posts.filter((curData)=>{
-            return curData.tagkv===catitem;
-
-        });
-        setPosts(result)
+    }, [user._id]);
+    const filterResult = (catitem) => {
+        if (!filterValue.kv.includes(catitem)) {
+            setFilterValue({ ...filterValue, kv: [ ...filterValue.kv, catitem] });
+        } else {
+            const kvItem = (filterValue.kv.filter(kv => kv !== catitem))
+            setFilterValue({ ...filterValue, kv: kvItem });
+        }
     }
-    const filterResult1=(catitem)=>{
-        const result = posts.filter((curData)=>{
-            return curData.tagtc===catitem;
-
-        });
-        setPosts(result)
+    const filterResult1 = (catitem) => {
+        if (!filterValue.tc.includes(catitem)) {
+            setFilterValue({ ...filterValue, tc: [ ...filterValue.tc, catitem] });
+        } else {
+            const tcItem = (filterValue.tc.filter(tc => tc !== catitem))
+            setFilterValue({ ...filterValue, tc: tcItem });
+        }
     }
+    const filterResult2 = (catitem) => {
+        if (!filterValue.dm.includes(catitem)) {
+            setFilterValue({ ...filterValue, dm: [ ...filterValue.dm, catitem] });
+        } else {
+            const dmItem = (filterValue.dm.filter(dm => dm !== catitem))
+            setFilterValue({ ...filterValue, dm: dmItem });
+        }
+    }
+    useEffect(() => {
+        let result = posts;
+        
+        if (filterValue.kv.length !== 0) {
+            result = result.filter(p => filterValue.kv.includes(p.tagkv));
+        }
+        console.log(result)
+        if (filterValue.tc.length !== 0) {
+            result = result.filter(p => filterValue.tc.includes(p.tagtc));
+        }
+        console.log(result)
+        if (filterValue.dm.length !== 0) {
+            result = result.filter(p => filterValue.dm.includes(p.tagdm));
+        }
+        console.log(result)
+        console.log(filterValue)
+        setShowPosts(result);
+    }, [filterValue])
     const SearchSidebar = () => {
         return (
             <div className="searchsidebar">
@@ -56,12 +90,12 @@ export default function SearchPage() {
                     <div className='searchsidebar-top'>
                         <div className='search-top'>
                             <span>Khu vực</span>
-                            <ArrowDropDownIcon sx={{ fontSize: 40 }}  onClick={() => setShow1(!show1)}/>
+                            <ArrowDropDownIcon sx={{ fontSize: 40 }} onClick={() => setShow1(!show1)} />
                         </div>
-                        {show1&&<div className='searchbody-top'>
+                        {show1 && <div className='searchbody-top'>
                             {SliderSlickData.map((slides, idx) => (
-                                <div className='searchbody-item'>
-                                    <span><input type="checkbox" value  onClick = {()=>filterResult(slides.title)}/></span>
+                                <div className='searchbody-item' key={idx}>
+                                    <span><input type="checkbox" onClick={() => filterResult(slides.title)} /></span>
                                     <span>{slides.title}</span>
                                 </div>
                             ))}
@@ -70,13 +104,13 @@ export default function SearchPage() {
                     <div className='searchsidebar-between'>
                         <div className='search-between'>
                             <span>Tiêu Chí</span>
-                            <ArrowDropDownIcon sx={{ fontSize: 40 }}  onClick={() => setShow(!show)}/>
+                            <ArrowDropDownIcon sx={{ fontSize: 40 }} onClick={() => setShow(!show)} />
                         </div>
-                        {show&&<div className='searchbody-between'>
+                        {show && <div className='searchbody-between'>
                             {SliderData.map((slide) => {
-                                return(
+                                return (
                                     <div className='searchbody-item' >
-                                        <span href="#"><input type="checkbox"  onClick = {()=>filterResult1(slide.title)}/></span>
+                                        <span href="#"><input type="checkbox" onClick={() => filterResult1(slide.title)} /></span>
                                         <span>{slide.title}</span>
                                     </div>
                                 );
@@ -86,13 +120,13 @@ export default function SearchPage() {
                     <div className='searchsidebar-bottom'>
                         <div className='search-bottom'>
                             <span>Danh mục</span>
-                            <ArrowDropDownIcon sx={{ fontSize: 40 }}  onClick={() => setShow2(!show2)}/>
+                            <ArrowDropDownIcon sx={{ fontSize: 40 }} onClick={() => setShow2(!show2)} />
                         </div>
-                        {show2&&<div className='searchbody-bottom'>
+                        {show2 && <div className='searchbody-bottom'>
                             {CatologyData.map((list) => {
-                                return(
+                                return (
                                     <div className='searchbody-item'>
-                                        <span><input type="checkbox"/></span>
+                                        <span><input type="checkbox" onClick={() => filterResult2(list.title)} /></span>
                                         <span>{list.title}</span>
                                     </div>
                                 );
@@ -104,24 +138,24 @@ export default function SearchPage() {
         );
     };
     const SearchFeed = () => {
-        return(
+        return (
             <div className="bodysearchFeed">
-                {posts.map((p) => {
+                {showPosts.map((p, index) => {
                     return (
-                    <Post key={p._id} post={p}  />
+                        <Post key={index} post={p} />
                     )
                 })}
             </div>
         );
-        
+
     };
-  return (
-    <>
-        <Topbar/>
-        <div className='searchContainer'>
-            <SearchSidebar/>
-            <SearchFeed/>
-        </div>
-    </>
-  )
+    return (
+        <>
+            <Topbar />
+            <div className='searchContainer'>
+                <SearchSidebar />
+                <SearchFeed />
+            </div>
+        </>
+    )
 }
