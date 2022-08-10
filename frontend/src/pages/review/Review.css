@@ -109,11 +109,20 @@
   .reviewImgContainer{
     padding: 0 20px 10px 20px;
     position: relative;
+    flex-wrap: wrap;
   }
   
   .reviewImg{
+    max-width: 50%;
+    height: 150px;
+    flex-wrap: wrap;
+    object-fit: cover;
+    padding: 4px;
+  }
+  .reviewImg1{
     width: 100%;
     object-fit: cover;
+    padding: 4px;
   }
   
   .reviewCancelImg{

@@ -128,9 +128,26 @@ export default function Review() {
                             <div className="reviewImgContainer">
 
                                 {
-                                    mutifile.length > 1 ? mutifile.map((img) =>
-                                        <img className="reviewImg" src={URL.createObjectURL(img)} alt="" />
-                                    ) : null
+                                    mutifile.map((img) =>{
+                                        if (mutifile.length > 1){
+                                            return (
+                                                <img className="reviewImg" src={URL.createObjectURL(img)} alt="" />
+                                            )
+                                        }
+                                        if (mutifile.length === 1){
+                                            return(
+                                                <img className="reviewImg1" src={URL.createObjectURL(img)} alt="" />
+                                            )
+                                            
+                                        }
+                                        if (mutifile.length > 4){
+                                            return(
+                                                <img className="reviewImg2" src={URL.createObjectURL(img)} alt="" />
+                                            )
+                                            
+                                        }
+                                    })
+                                      
                                 }
                                 <CancelIcon className="reviewCancelImg" onClick={() => setMutifile(null)} />
                             </div>

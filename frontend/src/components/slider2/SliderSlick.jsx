@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom";
 import "./SliderSlick.css";
 import { useState } from "react";
 import { SliderSlickData } from './SliderSlickData';
@@ -44,10 +45,12 @@ export default function SliderSlick() {
       <hr className="sidebarHr" />
       <Slider {...settings}>
         {SliderSlickData.map((slide, idx) => (
-          <div className={idx === imageIndex ? "slideslick activeSlideSlick" : "slideslick"}>
-            <img src={slide.image} alt='travel' />
-            <div>{slide.title}</div>
-          </div>
+          <Link to="/searchpage" style={{ textDecoration: "none" }}>
+            <div className={idx === imageIndex ? "slideslick activeSlideSlick" : "slideslick"}>
+              <img src={slide.image} alt='travel' />
+              <div>{slide.title}</div>
+            </div>
+          </Link>
         ))}
         
       </Slider>

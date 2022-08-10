@@ -193,7 +193,7 @@ export default function Topbar(socket) {
                   </div>
                 )
               }
-              } )}
+            })}
       </div>
     )
   }

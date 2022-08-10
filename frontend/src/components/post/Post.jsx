@@ -209,9 +209,19 @@ export default function Post({ post }) {
             <div className="postcenterimg">
               {
                 post.img &&
-                post.img.map(imgSrc => (
-                  <img className="postImg" src={PF + imgSrc} alt="" />
-                ))
+                post.img.map((imgSrc) => {
+                  if(post.img.length === 1){
+                    return (
+                      <img className="postImg1" src={PF + imgSrc} alt="" />
+                    )
+                  }
+                  if(post.img.length > 1){
+                    return (
+                      <img className="postImg" src={PF + imgSrc} alt="" />
+                    )
+                  }
+                  
+                })
               }
             </div>
            
