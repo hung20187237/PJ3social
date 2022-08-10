@@ -10,6 +10,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import Topbar from "../../components/topbar/Topbar";
 import BasicRating from "../../components/star/star";
 import { Editor } from '@tinymce/tinymce-react';
+import FbImageLibrary from 'react-fb-image-grid'
 
 
 
@@ -25,6 +26,7 @@ export default function Review() {
     const tagtc = useRef();
     const tagdm = useRef();
     const [mutifile, setMutifile] = useState('');
+    const [mutiupload, setMutiupload] = useState(null);
     const [files, setFiles] = useState();
 
 
@@ -78,9 +80,11 @@ export default function Review() {
 
     const MutipleFileChange = (files) => {
         const listImg = Object.values(files);
+        const listUrl = listImg.map( img => URL.createObjectURL(img));
         console.log(listImg);
         setFiles(files);
         setMutifile(listImg);
+        setMutiupload(listUrl)
     }
 
 
@@ -124,32 +128,14 @@ export default function Review() {
                             </div>
                         </div>
                         <hr className="reviewHr" />
-                        {mutifile && (
+                        {mutiupload && (
                             <div className="reviewImgContainer">
 
                                 {
-                                    mutifile.map((img) =>{
-                                        if (mutifile.length > 1){
-                                            return (
-                                                <img className="reviewImg" src={URL.createObjectURL(img)} alt="" />
-                                            )
-                                        }
-                                        if (mutifile.length === 1){
-                                            return(
-                                                <img className="reviewImg1" src={URL.createObjectURL(img)} alt="" />
-                                            )
-                                            
-                                        }
-                                        if (mutifile.length > 4){
-                                            return(
-                                                <img className="reviewImg2" src={URL.createObjectURL(img)} alt="" />
-                                            )
-                                            
-                                        }
-                                    })
+                                    <FbImageLibrary images={mutiupload} countFrom={5} />
                                       
                                 }
-                                <CancelIcon className="reviewCancelImg" onClick={() => setMutifile(null)} />
+                                <CancelIcon className="reviewCancelImg" onClick={() => setMutiupload(null)} />
                             </div>
                         )}
                         <form className="reviewBottom" onSubmit={submitHandler}>

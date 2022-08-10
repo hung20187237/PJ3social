@@ -112,19 +112,6 @@
     flex-wrap: wrap;
   }
   
-  .reviewImg{
-    max-width: 50%;
-    height: 150px;
-    flex-wrap: wrap;
-    object-fit: cover;
-    padding: 4px;
-  }
-  .reviewImg1{
-    width: 100%;
-    object-fit: cover;
-    padding: 4px;
-  }
-  
   .reviewCancelImg{
     position: absolute;
     top: 0;

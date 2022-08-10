@@ -10,6 +10,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import BasicRating from "../star/star";
 import RoomIcon from '@mui/icons-material/Room';
+import FbImageLibrary from 'react-fb-image-grid'
 
 
 export default function Post({ post }) {
@@ -24,6 +25,7 @@ export default function Post({ post }) {
   const { user: currentUser, notifyFlag, dispatch } = useContext(Context);
   const comment = useRef()
   const body = post.desc
+  const listUrl = post.img.map( img => (PF + img))
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
@@ -207,22 +209,9 @@ export default function Post({ post }) {
           <div className="postCenter">
             <div className="postText" dangerouslySetInnerHTML={{ __html: body }} />
             <div className="postcenterimg">
-              {
-                post.img &&
-                post.img.map((imgSrc) => {
-                  if(post.img.length === 1){
-                    return (
-                      <img className="postImg1" src={PF + imgSrc} alt="" />
-                    )
-                  }
-                  if(post.img.length > 1){
-                    return (
-                      <img className="postImg" src={PF + imgSrc} alt="" />
-                    )
-                  }
-                  
-                })
-              }
+              {post.img &&(
+                <FbImageLibrary images={listUrl} countFrom={5} />
+              )}
             </div>
            
 
