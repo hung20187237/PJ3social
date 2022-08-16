@@ -13,6 +13,14 @@ const Reducer = (state, action) => {
           ...state,
           user: {
             ...state.user,
+            saveposts: [...state.user.saveposts, action.payload],
+          },
+        };
+    case "SAVEPOST":
+        return {
+          ...state,
+          user: {
+            ...state.user,
             followings: [...state.user.followings, action.payload],
           },
         };

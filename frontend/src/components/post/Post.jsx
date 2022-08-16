@@ -8,9 +8,13 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import BasicRating from "../star/star";
+import BasicStar from "../starone/star";
+import BasicRating from "../../components/star/star";
 import RoomIcon from '@mui/icons-material/Room';
 import FbImageLibrary from 'react-fb-image-grid'
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+
 
 
 export default function Post({ post }) {
@@ -22,6 +26,7 @@ export default function Post({ post }) {
   const [isLiked, setIsLiked] = useState(false);
   const [commentComponent, setCommentComponent] = useState(false)
   const [user, setUser] = useState({});
+  const [more, setMore] = useState(false);
   const { user: currentUser, notifyFlag, dispatch } = useContext(Context);
   const comment = useRef()
   const body = post.desc
@@ -128,9 +133,22 @@ export default function Post({ post }) {
     }
   }
 
+  const handleClickMore = () =>{
+    setMore(!more)
+  }
+
+  const MoreContainer = () => {
+    return(
+        <div className="moremain">
+          <BasicStar/>
+          <span>Lưu bài viết</span>
+        </div>
+    )
+  }
+
   const PostCommentComponent = () => {
     return (
-      <>
+      
         <div className="postComment">
           <div className="postCommentInputWrapper">
             <input type="text" className="postCommentInput" placeholder=" Write your comment ..." ref={comment} />
@@ -168,7 +186,7 @@ export default function Post({ post }) {
             }
           </div>
         </div>
-      </>
+      
     )
   }
 
@@ -203,7 +221,13 @@ export default function Post({ post }) {
               </div>
             </div>
             <div className="postTopRight">
-              {post.userId == currentUser._id ? <DeleteForeverIcon htmlColor="red" onClick={handlePostDelete} /> : null}
+              <div>
+                {post.userId === currentUser._id ? <DeleteForeverIcon htmlColor="red" onClick={handlePostDelete} /> : null}
+              </div>
+              <div className="moreIcon" onClick={handleClickMore}>
+                <MoreVertIcon/>
+                {more ? <MoreContainer/>: null}
+              </div>
             </div>
           </div>
           <div className="postCenter">
