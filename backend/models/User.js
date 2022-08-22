@@ -36,10 +36,6 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    saveposts: {
-      type: Array,
-      default: [],
-    },
     friends: {
       type: Array,
       default: []

@@ -59,6 +59,24 @@ router.put("/:id/like", async (req, res) => {
   }
 });
 
+// save a post
+router.put("/:id/save", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post.saveposts.includes(req.body.userId)) {
+      await post.updateOne({ $push: { saveposts: req.body.userId } });
+      res.status(200).json("The post has been saved");
+    } else {
+      await post.updateOne({ $pull: { saveposts: req.body.userId } });
+      res.status(200).json("The post has been unsaved");
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
+
 //get a post
 router.get("/:id", async (req, res) => {
   try {
@@ -103,6 +121,18 @@ router.get("/profile/:username", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });
     const posts = await Post.find({ userId: user._id });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
+//get user's with save
+router.get("/saveposts/:username", async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    const posts = await Post.find(saveposts.find(e => e === user._id));
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);

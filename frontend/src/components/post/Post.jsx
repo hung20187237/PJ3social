@@ -14,6 +14,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import FbImageLibrary from 'react-fb-image-grid'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { Box } from "@mui/system";
 
 
 
@@ -21,9 +22,11 @@ export default function Post({ post }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [currentPost, setCurrentPost] = useState(post);
   const [likes, setLikes] = useState(post.likes.length);
+  const [saved, setSaved] = useState(post.saveposts.length);
   const [comments, setComments] = useState([]);
   const [commentusers, setCommentUsers] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const [commentComponent, setCommentComponent] = useState(false)
   const [user, setUser] = useState({});
   const [more, setMore] = useState(false);
@@ -34,6 +37,10 @@ export default function Post({ post }) {
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
+  }, []);
+
+  useEffect(() => {
+    setIsSaved(post.saveposts.includes(currentUser._id));
   }, []);
 
   //lay thong tin nguoi dang bai
@@ -77,6 +84,15 @@ export default function Post({ post }) {
     setIsLiked(!isLiked);
     handleLikeNotify();
   };
+
+    //xu ly khi Save bai dang
+    const handleClickSave = () => {
+      try {
+        axios.put("http://localhost:8800/api/post/" + post._id + "/save", { userId: currentUser._id });
+      } catch (err) { }
+      setSaved(isSaved ? saved - 1 : saved + 1);
+      setIsSaved(!isSaved);
+    };
 
   //xu ly thong bao
   const handleLikeNotify = () => {
@@ -140,7 +156,20 @@ export default function Post({ post }) {
   const MoreContainer = () => {
     return(
         <div className="moremain">
-          <BasicStar/>
+          {isSaved ?
+            <div
+              onClick={handleClickSave}
+            >
+              <BasicStar value ={1}
+              />
+            </div>:
+            <div
+              onClick={handleClickSave}
+            >
+              <BasicStar value ={0}
+              />
+            </div>
+          }
           <span>Lưu bài viết</span>
         </div>
     )

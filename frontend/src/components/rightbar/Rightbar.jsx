@@ -23,6 +23,7 @@ export default function Rightbar({ user, username }) {
   const [profileUpdate, setProfileUpdate] = useState(false);
   const [followed, setFollowed] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [saveposts, setSavePosts] = useState([]);
   const [addFriend, setAddFriend] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const [background, setBackground] = useState(null);
@@ -63,6 +64,20 @@ export default function Rightbar({ user, username }) {
     fetchPosts();
   }, [username, currentUser._id]);
 
+
+  useEffect(() => {
+    const fetchSavePosts = async () => {
+      const res = await axios.get("http://localhost:8800/api/post/saveposts/" + username)
+      setSavePosts(
+        res.data.sort((p1, p2) => {
+          return (p2.createdAt)-(p1.createdAt);
+        })
+      );
+    };
+    fetchSavePosts();
+  }, [username]);
+
+  console.log(saveposts)
 
   useEffect(()=>{
     setIsFriend(currentUser.friends.includes(user?._id))
@@ -277,10 +292,10 @@ export default function Rightbar({ user, username }) {
             </div>
             <hr className="sidebarHr" />
             <ul className="sidebarFriendList">
-            {posts.map((p) => {
-              return (
-              <ClosePlace key={p.id} post={p}  />
-            )})}
+              {posts.map((p) => {
+                return (
+                <ClosePlace key={p.id} post={p}  />
+              )})}
             </ul>
         </div>
         
@@ -306,7 +321,7 @@ export default function Rightbar({ user, username }) {
             {addFriend ? "Waiting for friend's acceptance" : "Add friend"}
             {addFriend ? <RemoveIcon /> : <AddIcon />}
           </button>)}
-         {user.username == currentUser.username && (
+        {user.username == currentUser.username && (
           <button className="rightbarUpdateProfileButton" onClick={handleClickUpdateProfile}>
             Update Profile
           </button>
@@ -346,28 +361,13 @@ export default function Rightbar({ user, username }) {
             </Link>
           ))}
         </div>
-        <h4 className="rightbarTitle">Friends</h4>
+        <h4 className="rightbarTitle">Save Post</h4>
         <div className="rightbarFollowings">
-          {friends.map((friend) => (
-            <Link
-              key={friend._id}
-              to={"/profile/" + friend.username}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="rightbarFollowing">
-                <img
-                  src={
-                    friend.avatar
-                      ? PF + friend.avatar
-                      : PF + "person/noAvatar.png"
-                  }
-                  alt=""
-                  className="rightbarFollowingImg"
-                />
-                <span className="rightbarFollowingName">{friend.username}</span>
-              </div>
-            </Link>
-          ))}
+          {saveposts.map((save) => {
+            return (
+              <ClosePlace key={save.id} post={save} />
+            )
+          })}
         </div>
       </>
     );

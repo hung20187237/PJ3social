@@ -2,8 +2,7 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 
-function BasicStar() {
-
+function BasicStar(value) {
   return (
     <Box
       sx={{
@@ -15,7 +14,7 @@ function BasicStar() {
     >
       <Rating
         name="simple-controlled"
-        defaultValue={0}
+        defaultValue={value.value}
         max={1} 
         sx ={{fontSize: 20}}
       />

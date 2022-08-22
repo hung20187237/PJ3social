@@ -18,6 +18,10 @@ const PostSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    saveposts: {
+      type: Array,
+      default: [],
+    },
     title: {
       type: String,
       max: 100,
