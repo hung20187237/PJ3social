@@ -67,7 +67,7 @@ export default function Rightbar({ user, username }) {
 
   useEffect(() => {
     const fetchSavePosts = async () => {
-      const res = await axios.get("http://localhost:8800/api/post/saveposts/" + username)
+      const res = await axios.get("http://localhost:8800/api/post/saveposts/" + currentUser._id)
       setSavePosts(
         res.data.sort((p1, p2) => {
           return (p2.createdAt)-(p1.createdAt);
@@ -75,7 +75,7 @@ export default function Rightbar({ user, username }) {
       );
     };
     fetchSavePosts();
-  }, [username]);
+  }, [currentUser._id]);
 
   console.log(saveposts)
 
@@ -217,7 +217,7 @@ export default function Rightbar({ user, username }) {
       console.log(err)
     }
   };
-
+  console.log(saveposts)
   const ProfileUpdateRightbar = () => {
     return (
       <>

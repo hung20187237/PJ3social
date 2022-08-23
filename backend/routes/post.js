@@ -127,13 +127,42 @@ router.get("/profile/:username", async (req, res) => {
   }
 });
 
+router.get("/timeline/:id", async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.params.id);
+    const userPosts = await Post.find({ userId: currentUser._id });
+    const followingPosts = await Promise.all(
+      currentUser.followings.map((followingId) => {
+        return Post.find({ userId: followingId });
+      })
+    );
+    const friendPosts = await Promise.all(
+      currentUser.friends.map((friendId) => {
+        return Post.find({ userId: friendId });
+      })
+    );
+    let post = userPosts.concat(...followingPosts).concat(...friendPosts)
+      
+    //loai bo bai viet trung lap
+    let timelinePost = post;
+    res.status(200).json(timelinePost);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 //get user's with save
-router.get("/saveposts/:username", async (req, res) => {
+router.get("/saveposts/:id", async (req, res) => {
+  const savePosts = [];
   try {
-    const user = await User.findOne({ username: req.params.username });
-    const posts = await Post.find(saveposts.find(e => e === user._id));
-    res.status(200).json(posts);
+    const currentUser = await User.findById(req.params.id);
+    await Post.saveposts.map((saveid) => {
+      if(saveid === currentUser._id){
+        return savePosts.push(Post)
+      }
+    });
+    res.status(200).json(savePosts);
   } catch (err) {
     res.status(500).json(err);
   }
