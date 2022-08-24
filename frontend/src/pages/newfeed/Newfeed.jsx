@@ -31,7 +31,7 @@ export default function Newfeed(username) {
         <div className="bodyNewFeed">
           {posts.map((p) => {
               return (
-              <Post key={p._id} post={p}  />
+              <Post key={p._id} post={p} user1 = {user}  />
               )
           })}
         </div>

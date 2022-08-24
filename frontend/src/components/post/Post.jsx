@@ -18,7 +18,7 @@ import { Box } from "@mui/system";
 
 
 
-export default function Post({ post }) {
+export default function Post({ post, user1 }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [currentPost, setCurrentPost] = useState(post);
   const [likes, setLikes] = useState(post.likes.length);
@@ -89,7 +89,9 @@ export default function Post({ post }) {
     const handleClickSave = () => {
       try {
         axios.put("http://localhost:8800/api/post/" + post._id + "/save", { userId: currentUser._id });
+        
       } catch (err) { }
+      axios.put("http://localhost:8800/api/user/" + user1._id + "/save", { postId: post._id });
       setSaved(isSaved ? saved - 1 : saved + 1);
       setIsSaved(!isSaved);
     };
@@ -142,7 +144,7 @@ export default function Post({ post }) {
     try {
       await axios.delete("http://localhost:8800/api/comment/" + deleteComment._id, { data: { userId: currentUser._id } });
       setComments(comments.filter((comment) => {
-        return comment != deleteComment
+        return comment !== deleteComment
       }))
     } catch (err) {
       console.log(err)
@@ -263,7 +265,7 @@ export default function Post({ post }) {
             <div className="postText" dangerouslySetInnerHTML={{ __html: body }} />
             <div className="postcenterimg">
               {post.img &&(
-                <FbImageLibrary images={listUrl} countFrom={5} />
+                <FbImageLibrary images={listUrl} countFrom={5}/>
               )}
             </div>
            

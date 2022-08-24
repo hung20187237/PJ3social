@@ -13,7 +13,7 @@ import axios from "axios";
 
 
 
-export default function SearchPage() {
+export default function SearchPage(filter) {
     const [filterValue, setFilterValue] = useState({ kv: [], tc: [], dm: [] });
     const [posts, setPosts] = useState([]);
     const [showPosts, setShowPosts] = useState([]);
@@ -79,6 +79,16 @@ export default function SearchPage() {
         console.log(filterValue)
         setShowPosts(result);
     }, [filterValue])
+
+    const myFunction = (slides) => {
+        var checkBox = document.getElementById("myCheck");
+        if (checkBox.ariaChecked === true){
+            filterResult(slides.title)
+        } else {
+            filterResult(slides.title)
+        }
+    }
+
     const SearchSidebar = () => {
         return (
             <div className="searchsidebar">
@@ -93,12 +103,15 @@ export default function SearchPage() {
                             <ArrowDropDownIcon sx={{ fontSize: 40 }} onClick={() => setShow1(!show1)} />
                         </div>
                         {show1 && <div className='searchbody-top'>
-                            {SliderSlickData.map((slides, idx) => (
-                                <div className='searchbody-item' key={idx}>
-                                    <span><input type="checkbox" onClick={() => filterResult(slides.title)} /></span>
-                                    <span>{slides.title}</span>
-                                </div>
-                            ))}
+                            <form >
+                                {SliderSlickData.map((slides, idx) => (
+                                    <div className='searchbody-item' key={idx}>
+                                        <input type="checkbox" id='myCheck' onClick={myFunction(slides)}/>
+                                        {/* onClick={() => filterResult(slides.title)} */}
+                                        <span>{slides.title}</span>
+                                    </div>
+                                ))}
+                            </form>
                         </div>}
                     </div>
                     <div className='searchsidebar-between'>

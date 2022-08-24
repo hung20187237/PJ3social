@@ -65,19 +65,6 @@ export default function Rightbar({ user, username }) {
   }, [username, currentUser._id]);
 
 
-  useEffect(() => {
-    const fetchSavePosts = async () => {
-      const res = await axios.get("http://localhost:8800/api/post/saveposts/" + currentUser._id)
-      setSavePosts(
-        res.data.sort((p1, p2) => {
-          return (p2.createdAt)-(p1.createdAt);
-        })
-      );
-    };
-    fetchSavePosts();
-  }, [currentUser._id]);
-
-  console.log(saveposts)
 
   useEffect(()=>{
     setIsFriend(currentUser.friends.includes(user?._id))
@@ -88,6 +75,22 @@ export default function Rightbar({ user, username }) {
       try {
         const friendList = await axios.get("http://localhost:8800/api/user/friends/" + user?._id);
         setFriends(friendList.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if(user){
+      getFriends();
+
+    }
+
+  }, [user]);
+
+  useEffect(() => {
+    const getFriends = async () => {
+      try {
+        const postList = await axios.get("http://localhost:8800/api/user/savepost/" + user?._id);
+        setSavePosts(postList.data);
       } catch (err) {
         console.log(err);
       }

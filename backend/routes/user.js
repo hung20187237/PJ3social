@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+const Post = require("../models/Post");
 
 //update user
 router.put("/:id", async (req, res) => {
@@ -84,6 +85,42 @@ router.get("/followings/:id", async (req, res) => {
   }
 });
 
+// save a post
+router.put("/:id/save", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user.savedposts.includes(req.body.postId)) {
+      await user.updateOne({ $push: { savedposts: req.body.postId} });
+      res.status(200).json("The post has been saved");
+    } else {
+      await user.updateOne({ $pull: { savedposts: req.body.postId} });
+      res.status(200).json("The post has been unsaved");
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//get save post
+router.get("/savepost/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const savedposts = await Promise.all(
+      user.savedposts.map((savepostId) => {
+        return Post.findById(savepostId);
+      })
+    );
+    let postList = [];
+    savedposts.map((post) => {
+      const { _id, img, title, place, rating } = post;
+      postList.push({ _id, img, title, place, rating });
+    });
+    res.status(200).json(postList)
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //get friends
 router.get("/friends/:id", async (req, res) => {
   try {
@@ -103,8 +140,6 @@ router.get("/friends/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
-
 
 //follow a user
 router.put("/:id/follow", async (req, res) => {

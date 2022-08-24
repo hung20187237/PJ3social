@@ -17,7 +17,6 @@ export default function CloseFriend({user}) {
       setFollowed(true);
     }
 
-    // console.log(currentUser);
   }, [])
 
   const handleClickFollowOrUnfollow = async () => {

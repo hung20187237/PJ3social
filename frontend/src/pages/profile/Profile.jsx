@@ -72,7 +72,7 @@ export default function Profile() {
           <div className="bodypostProfile">
             {posts.map((p) => {
                 return (
-                <Post key={p._id} post={p}  />
+                <Post key={p._id} post={p} user1 = {user} />
                 )
             })}
           </div>

@@ -51,6 +51,7 @@
 }
 .searchbody-item{
     width: 100%;
+    display: flex;
     box-sizing: border-box;
     margin-top: 20px;
 }

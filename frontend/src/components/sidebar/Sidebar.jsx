@@ -1,5 +1,5 @@
 import "./Sidebar.css";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CloseFriend from "../closeFriend/CloseFriend";
 import axios from "axios";
 
