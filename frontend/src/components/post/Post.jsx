@@ -103,7 +103,7 @@ export default function Post({ post, user1 }) {
   //xu ly khi Reply comment
   const handleClickReply = async(commentId) => {
     try {
-      await axios.put("http://localhost:8800/api/post/" + commentId._id + "/reply", { descreply: reply.current.value, userreplyId: currentUser._id });
+      await axios.put("http://localhost:8800/api/comment/" + commentId._id + "/reply", { reply: { descreply: reply.current.value, userreplyId: currentUser._id }});
      
       // setComments([res.data, ...comments])
       setReplyUsers([...commentusers, currentUser])
