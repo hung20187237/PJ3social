@@ -105,6 +105,14 @@
   width: 80%;
   padding:20px;
 }
+.postReplyCommentInput{
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: 40%;
+  padding-bottom:20px;
+  margin-left: 40px;
+}
 
 .postCommentInput{
   width: 80%;

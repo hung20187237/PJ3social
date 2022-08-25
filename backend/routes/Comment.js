@@ -14,6 +14,17 @@ router.post("/", async (req, res) => {
   }
 });
 
+// get a reply
+router.put("/:id/reply", async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.id);
+    await comment.reply.updateOne({ $push: { descreply: req.body.replydesc, userreplyId: req.body.userreplyId } });
+    res.status(200).json("The comment has been saved");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //delete a comment
 router.delete("/:id", async (req, res) => {
   try {

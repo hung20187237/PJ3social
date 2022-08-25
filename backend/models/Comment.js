@@ -13,7 +13,20 @@ const CommentSchema = mongoose.Schema(
     desc: {
         type: String,
         required: true
-    }
+    },
+    reply: [
+        {
+            userreplyId: {
+                type: String,
+                required: true
+            },
+            descreply: {
+                type: String,
+                require: true
+            }
+        }
+        
+    ]
  },
  {timestamps: true})
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SliderData } from './SliderData';
 import "./imageSlider.css";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
@@ -44,10 +45,12 @@ const ImageSlider = ( ) => {
       <Slider {...settings}>
         {SliderData.map((slide) => {
           return(
-            <div className='card-top'>
-              <img src={slide.image} alt={slide.title}/>
-              <h1>{slide.title}</h1>
-            </div>
+            <Link to="/searchpage" style={{ textDecoration: "none" }}>
+              <div className='card-top'>
+                <img src={slide.image} alt={slide.title}/>
+                <h1>{slide.title}</h1>
+              </div>
+            </Link>
           );
         })}
       </Slider>

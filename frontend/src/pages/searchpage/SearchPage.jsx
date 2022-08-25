@@ -6,7 +6,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { SliderData } from '../../components/slider1/SliderData';
 import { SliderSlickData } from '../../components/slider2/SliderSlickData';
 import { CatologyData } from '../../components/catology/CatologyData';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import Post from "../../components/post/Post";
 import { Context } from "../../context/Context";
 import axios from "axios";
@@ -21,6 +21,7 @@ export default function SearchPage(filter) {
     const [show, setShow] = useState(false)
     const [show1, setShow1] = useState(false)
     const [show2, setShow2] = useState(false)
+
     useEffect(() => {
         const fetchPosts = async () => {
             const res = await axios.get("http://localhost:8800/api/post/timeline/" + user._id);
@@ -44,7 +45,7 @@ export default function SearchPage(filter) {
             const kvItem = (filterValue.kv.filter(kv => kv !== catitem))
             setFilterValue({ ...filterValue, kv: kvItem });
         }
-    }
+    };
     const filterResult1 = (catitem) => {
         if (!filterValue.tc.includes(catitem)) {
             setFilterValue({ ...filterValue, tc: [ ...filterValue.tc, catitem] });
@@ -80,14 +81,7 @@ export default function SearchPage(filter) {
         setShowPosts(result);
     }, [filterValue])
 
-    const myFunction = (slides) => {
-        var checkBox = document.getElementById("myCheck");
-        if (checkBox.ariaChecked === true){
-            filterResult(slides.title)
-        } else {
-            filterResult(slides.title)
-        }
-    }
+
 
     const SearchSidebar = () => {
         return (
@@ -106,9 +100,9 @@ export default function SearchPage(filter) {
                             <form >
                                 {SliderSlickData.map((slides, idx) => (
                                     <div className='searchbody-item' key={idx}>
-                                        <input type="checkbox" id='myCheck' onClick={myFunction(slides)}/>
-                                        {/* onClick={() => filterResult(slides.title)} */}
-                                        <span>{slides.title}</span>
+                                        <input type="checkbox" id='myCheck'  />
+                                        {/* onChange={() => filterResult(slides.title)} */}
+                                        <span onClick={() => filterResult(slides.title)}>{slides.title} </span>
                                     </div>
                                 ))}
                             </form>

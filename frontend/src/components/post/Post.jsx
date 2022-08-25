@@ -5,6 +5,7 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { FacebookProvider, Comments } from 'react-facebook';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
@@ -13,8 +14,7 @@ import BasicRating from "../../components/star/star";
 import RoomIcon from '@mui/icons-material/Room';
 import FbImageLibrary from 'react-fb-image-grid'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { Box } from "@mui/system";
+import ReplyIcon from '@mui/icons-material/Reply';
 
 
 
@@ -25,6 +25,8 @@ export default function Post({ post, user1 }) {
   const [saved, setSaved] = useState(post.saveposts.length);
   const [comments, setComments] = useState([]);
   const [commentusers, setCommentUsers] = useState([]);
+  const [replyusers, setReplyUsers] = useState([])
+  const [replycomment, setReplyComment] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [commentComponent, setCommentComponent] = useState(false)
@@ -32,6 +34,7 @@ export default function Post({ post, user1 }) {
   const [more, setMore] = useState(false);
   const { user: currentUser, notifyFlag, dispatch } = useContext(Context);
   const comment = useRef()
+  const reply = useRef()
   const body = post.desc
   const listUrl = post.img.map( img => (PF + img))
 
@@ -96,6 +99,16 @@ export default function Post({ post, user1 }) {
       setIsSaved(!isSaved);
     };
 
+
+  //xu ly khi Reply comment
+  const handleClickReply = async(commentId) => {
+    try {
+      await axios.put("http://localhost:8800/api/post/" + commentId._id + "/reply", { descreply: reply.current.value, userreplyId: currentUser._id });
+     
+      // setComments([res.data, ...comments])
+      setReplyUsers([...commentusers, currentUser])
+    } catch (err) { }
+  };
   //xu ly thong bao
   const handleLikeNotify = () => {
     try {
@@ -190,28 +203,69 @@ export default function Post({ post, user1 }) {
               comments.map((comment) => {
                 let user = {}
                 for (let i = 0; i < commentusers.length; i++) {
-                  if (commentusers[i]._id == comment.userId) {
+                  if (commentusers[i]._id === comment.userId) {
                     user = commentusers[i]
                   }
                 }
                 return (
-                  <div className="userComments" key={comment._id}>
-                    <img
-                      src={
-                        user.avatar
-                          ? PF + user.avatar
-                          : PF + "person/noAvatar.png"
-                      }
-                      alt=""
-                      className="userCommentImg"
-                    />
-                    <div className="userCommentNameWraper">
-                      <span className="userCommentName">{user.username}</span>
-                      <span className="postDate">{format(comment.createdAt)}</span>
+                  <>
+                    <div className="userComments" key={comment._id}>
+                      <img
+                        src={
+                          user.avatar
+                            ? PF + user.avatar
+                            : PF + "person/noAvatar.png"
+                        }
+                        alt=""
+                        className="userCommentImg"
+                      />
+                      <div className="userCommentNameWraper">
+                        <span className="userCommentName">{user.username}</span>
+                        <span className="postDate">{format(comment.createdAt)}</span>
+                      </div>
+                      <div className="userCommentDesc">{comment.desc}</div>
+                      {comment.userId === currentUser._id ? <DeleteForeverIcon onClick={() => { handleCommmentDelete(comment) }} htmlColor='red' /> : null}
+                      {comment.userId !== currentUser._id ? <ReplyIcon htmlColor='lightseagreen' onClick={() => { setReplyComment(!replycomment) }}/> : null}
                     </div>
-                    <div className="userCommentDesc">{comment.desc}</div>
-                    {comment.userId === currentUser._id ? <DeleteForeverIcon onClick={() => { handleCommmentDelete(comment) }} htmlColor='red' /> : null}
-                  </div>
+                    <div className="postCommentsWrapper" >
+                      {comment.reply.map((rep) => {
+                        let userreply = {}
+                        for (let i = 0; i < replyusers.length; i++) {
+                          if (replyusers[i]._id === rep.userreplyId) {
+                            userreply = replyusers[i]
+                          }
+                        }
+                        return(
+                          <div className="userComments" key={rep._id}>
+                            <img
+                              src={
+                                userreply.avatar
+                                  ? PF + userreply.avatar
+                                  : PF + "person/noAvatar.png"
+                              }
+                              alt=""
+                              className="userCommentImg"
+                            />
+                            <div className="userCommentNameWraper">
+                              <span className="userCommentName">{userreply.username}</span>
+                              <span className="postDate">{format(rep.createdAt)}</span>
+                            </div>
+                            <div className="userCommentDesc">{rep.descreply}</div>
+                            {rep.userreplyId === currentUser._id ? <DeleteForeverIcon onClick={() => { handleCommmentDelete(comment) }} htmlColor='red' /> : null}
+                            {rep.userreplyId !== currentUser._id ? <ReplyIcon htmlColor='lightseagreen' onClick={() => { setReplyComment(!replycomment) }}/> : null}
+                          </div>
+                        )
+                      })}
+                    </div>
+                    {replycomment ? <div className="postReplyCommentInput">
+                        <input type="text" className="postCommentInput" 
+                          placeholder=" Write your comment ..." 
+                          ref={reply} 
+                          />
+                        <SendIcon htmlColor='LightSeaGreen' onClick ={() => {handleClickReply(comment)}}/>
+                    </div> : null}
+                  </>
+                  
                 )
               })
             }
@@ -220,6 +274,7 @@ export default function Post({ post, user1 }) {
       
     )
   }
+
 
   return (
     <div className="post">
