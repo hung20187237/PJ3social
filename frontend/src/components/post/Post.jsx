@@ -105,7 +105,6 @@ export default function Post({ post, user1 }) {
   const handleClickReply = async(commentId) => {
     try {
       const respo = await axios.put("http://localhost:8800/api/comment/" + commentId._id + "/reply", { reply: { descreply: reply.current.value, userreplyId: currentUser._id }});
-      console.log(respo)
       setComments( comments.map((comment) => {
         return(comment === commentId ? (comment = respo.data): comment)
       }))
@@ -113,7 +112,6 @@ export default function Post({ post, user1 }) {
       handleReplyCommmentNotify(reply.current.value)
     } catch (err) { }
   };
-  console.log(comments)
   //xu ly thong bao
   const handleLikeNotify = () => {
     try {

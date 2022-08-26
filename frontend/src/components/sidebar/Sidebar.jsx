@@ -23,7 +23,7 @@ export default function Sidebar(username) {
         </div>
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
-          {users.map((u) => (
+          {users.slice(0, 5).map((u) => (
             <CloseFriend key={u.id} user={u} />
           ))}
         </ul>

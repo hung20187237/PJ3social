@@ -17,7 +17,6 @@ import ClosePlace from "../closePlace/ClosePlace";
 export default function Rightbar({ user, username }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [followings, setFollowings] = useState([]);
-  const [friends, setFriends] = useState([]);
   const [isFriend, setIsFriend] = useState([]);
   const { user: currentUser, dispatch } = useContext(Context);
   const [profileUpdate, setProfileUpdate] = useState(false);
@@ -70,21 +69,6 @@ export default function Rightbar({ user, username }) {
     setIsFriend(currentUser.friends.includes(user?._id))
   },[currentUser,user?._id])
 
-  useEffect(() => {
-    const getFriends = async () => {
-      try {
-        const friendList = await axios.get("http://localhost:8800/api/user/friends/" + user?._id);
-        setFriends(friendList.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if(user){
-      getFriends();
-
-    }
-
-  }, [user]);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -295,7 +279,7 @@ export default function Rightbar({ user, username }) {
             </div>
             <hr className="sidebarHr" />
             <ul className="sidebarFriendList">
-              {posts.map((p) => {
+              {(posts.slice(0, 5)).map((p) => {
                 return (
                 <ClosePlace key={p.id} post={p}  />
               )})}
