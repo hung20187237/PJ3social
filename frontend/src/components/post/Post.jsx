@@ -64,6 +64,7 @@ export default function Post({ post, user1 }) {
       })
       setComments(commentsSort);
       setCommentUsers(res.data.users);
+      setReplyUsers(res.data.users);
     };
     fetchComments();
   }, []);
@@ -103,12 +104,16 @@ export default function Post({ post, user1 }) {
   //xu ly khi Reply comment
   const handleClickReply = async(commentId) => {
     try {
-      await axios.put("http://localhost:8800/api/comment/" + commentId._id + "/reply", { reply: { descreply: reply.current.value, userreplyId: currentUser._id }});
-     
-      // setComments([res.data, ...comments])
-      setReplyUsers([...commentusers, currentUser])
+      const respo = await axios.put("http://localhost:8800/api/comment/" + commentId._id + "/reply", { reply: { descreply: reply.current.value, userreplyId: currentUser._id }});
+      console.log(respo)
+      setComments( comments.map((comment) => {
+        return(comment === commentId ? (comment = respo.data): comment)
+      }))
+      setReplyUsers([...replyusers, currentUser])
+      handleReplyCommmentNotify(reply.current.value)
     } catch (err) { }
   };
+  console.log(comments)
   //xu ly thong bao
   const handleLikeNotify = () => {
     try {
@@ -151,6 +156,22 @@ export default function Post({ post, user1 }) {
     } catch (err) { }
     dispatch({ type: "NOTIFICATION", payload: !notifyFlag });
   }
+  
+  //xu ly thong bao
+  const handleReplyCommmentNotify = (reply) => {
+    try {
+      const notify = {
+        sendUserId: currentUser._id,
+        receiveUserId: user._id,
+        sendUserName: currentUser.username,
+        post: reply,
+        type: 5
+      }
+      axios.post("http://localhost:8800/api/notification", notify);
+    } catch (err) { }
+    dispatch({ type: "NOTIFICATION", payload: !notifyFlag });
+  }
+
 
   //xu ly khi xoa comment
   const handleCommmentDelete = async (deleteComment) => {
@@ -236,7 +257,7 @@ export default function Post({ post, user1 }) {
                           }
                         }
                         return(
-                          <div className="userComments" key={rep._id}>
+                          <div className="userReplyComments" key={rep._id}>
                             <img
                               src={
                                 userreply.avatar
@@ -257,7 +278,7 @@ export default function Post({ post, user1 }) {
                         )
                       })}
                     </div>
-                    {replycomment ? <div className="postReplyCommentInput">
+                    {replycomment&&comment.userId !== currentUser._id ? <div className="postReplyCommentInput">
                         <input type="text" className="postCommentInput" 
                           placeholder=" Write your comment ..." 
                           ref={reply} 

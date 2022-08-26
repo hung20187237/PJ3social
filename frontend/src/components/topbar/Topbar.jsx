@@ -12,7 +12,7 @@ import { format } from "timeago.js";
 
 
 export default function Topbar(socket) {
-  const { user, dispatch, notifyFlag } = useContext(Context);
+  const { user, dispatch} = useContext(Context);
   const [notificationAlert, setNotificationAlert] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [countNewNotifications, setCountNewNotifications] = useState(-1);
@@ -33,15 +33,16 @@ export default function Topbar(socket) {
         const getNotifications = async () => {
           try {
             const res = await axios.get("http://localhost:8800/api/notification/" + user._id);
-            const data = [...res.data].reverse();
-            setNotifications(data);
-            setCountNewNotifications(res.data.length);
+            setNotifications(res.data.sort((p1, p2) => {
+              return new Date(p2.createdAt) - new Date(p1.createdAt);
+            }));
+            setCountNewNotifications(res.data.length)
           } catch (err) {
             console.log(err);
           }
         };
         getNotifications();
-      }, [notifyFlag]);
+      }, []);
 
       useEffect(() => {
         socket.current?.on("getNotification", (data) => {
@@ -61,16 +62,17 @@ export default function Topbar(socket) {
         newNotification &&
           setNotifications((prev) => [...prev, newNotification]);
           setCountNewNotifications(countNewNotifications + 1)
-      }, [newNotification]);
+      },[newNotification]);
     
 
-  useEffect(() => {
+      useEffect(() => {
         deletedfriendRequestNotification &&
           setNotifications(notifications.filter((notification)=>{
             let deletedValue = {...deletedfriendRequestNotification,type:4}
             
             return (notification.sendUserName !== deletedValue.sendUserName && notification.type !== deletedValue.type) && notification !== deletedfriendRequestNotification
           }));
+          console.log(notifications)
       }, [deletedfriendRequestNotification]);
     
 
@@ -182,6 +184,15 @@ export default function Topbar(socket) {
                           <button className='friendRequestAlertItemButton' onClick={()=>{handleClickAcceptAddFriend(notification)}}>Accept</button>
                           <button className='friendRequestAlertItemButton' onClick={()=>{handleClickRejectAddFriend(notification)}}>Reject</button>
                       </div>
+                  </div>
+                )
+              }
+              if(notification.type === 5){
+                action = "Replycommented";
+                return (
+                  <div className="notificationAlertItem" ref={scrollRef}>
+                  <span className="notificationAlertItemDesc">{`${notification.sendUserName} ${action} your comment:  "${notification.post.substring(0,50)}..."`}</span>
+                  <div className="notificationDate">{format(notification.createdAt)}</div>
                   </div>
                 )
               }

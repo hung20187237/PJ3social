@@ -21,8 +21,9 @@ router.put("/:id/reply", async (req, res) => {
   const {descreply, userreplyId} = req.body.reply;
   try {
     const comment = await Comment.findById(req.params.id);
-    await comment.updateOne({ $push: {reply: { descreply, userreplyId }} });
-    res.status(200).json("The comment has been saved");
+    const reply = await comment.updateOne({ $push: {reply: { descreply, userreplyId }} });
+    const comment1 = await Comment.findById(req.params.id);
+    res.status(200).json(comment1);
   } catch (err) {
     res.status(500).json(err);
   }

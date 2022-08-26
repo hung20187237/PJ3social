@@ -132,6 +132,13 @@
   padding: 20px;
 }
 
+.userReplyComments{
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  margin-left: 28px;
+}
+
 .userCommentImg{
   width: 30px;
   height: 30px;
