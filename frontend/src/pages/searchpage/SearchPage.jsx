@@ -100,7 +100,7 @@ export default function SearchPage(filter) {
                             <form >
                                 {SliderSlickData.map((slides, idx) => (
                                     <div className='searchbody-item' key={idx}>
-                                        <input type="checkbox" id='myCheck'  />
+                                        {/* <input type="checkbox" id='myCheck'  />
                                         {/* onChange={() => filterResult(slides.title)} */}
                                         <span onClick={() => filterResult(slides.title)}>{slides.title} </span>
                                     </div>

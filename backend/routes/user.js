@@ -115,6 +115,7 @@ router.get("/savepost/:id", async (req, res) => {
       const { _id, img, title, place, rating } = post;
       postList.push({ _id, img, title, place, rating });
     });
+    
     res.status(200).json(postList)
   } catch (err) {
     res.status(500).json(err);

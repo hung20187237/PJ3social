@@ -78,13 +78,14 @@ export default function Rightbar({ user, username }) {
       } catch (err) {
         console.log(err);
       }
+      
     };
     if(user){
       getFriends();
-
     }
 
   }, [user]);
+  console.log(saveposts)
 
   useEffect(() => {
     const getFriendRequest = async () => {
