@@ -42,7 +42,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-//get a user 
+// get a user 
 router.get("/", async (req, res) => {
   const userId = req.query.userId;
   const username = req.query.username;
@@ -54,6 +54,18 @@ router.get("/", async (req, res) => {
     res.status(200).json(other);
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+//searchtextsearch
+router.get("/textSearch/", async (req, res) => {
+  const searchText = req.query.searchText;
+  try {
+    const users = await User.find({ username: { $regex: searchText } });
+    const posts = await Post.find({ title: { $regex: searchText } });
+    const result = [...users, ...posts]
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to search users' });
   }
 });
 //get all user
