@@ -17,6 +17,7 @@ function BasicStar(value) {
         defaultValue={value.value}
         max={1} 
         sx ={{fontSize: 20}}
+        style={{marginBottom: '-5px'}}
       />
     </Box>
   );

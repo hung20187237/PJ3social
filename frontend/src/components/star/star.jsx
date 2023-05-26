@@ -32,6 +32,7 @@ function BasicRating(props, ref) {
       <Rating
         name="simple-controlled"
         value={props.rating ?? value}
+        style={{marginBottom: '-5px'}}
         onChange={(event, newValue) => {
           if (!props.rating) {
             ref.current = newValue;
@@ -39,7 +40,7 @@ function BasicRating(props, ref) {
           }
         }}
       />
-      <Box sx={{ ml: 2 }}>{scores[props.rating]}</Box>
+      <Box sx={{ ml: 2 }}>{scores[props.rating||value]}</Box>
     </Box>
   );
 }
