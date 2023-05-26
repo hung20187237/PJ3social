@@ -1,6 +1,7 @@
 import "./Topbar.css";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import { UserOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { useContext, useRef, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
@@ -22,6 +23,7 @@ export default function Topbar(socket) {
     setDeletedFriendRequestNotification,
   ] = useState();
   const [textSearch, setTextSearch] = useState("");
+  const [postId, setPostId] = useState("");
   const [listSearchUser, setListSearchUser] = useState([]);
   const [optionUser, setOptionUser] = useState([]);
   const usernameSearch = useRef();
@@ -83,12 +85,17 @@ export default function Topbar(socket) {
   }, [textSearch]);
 
   useEffect(() => {
+    const username = listSearchUser.filter(user => user.username);
+    const titles = listSearchUser.filter(user => user.title);
+    console.log(username, titles)
       setOptionUser([
         {
-        label: 'Người dùng',
-        listSearchUser.map((item) => ({
-          options: item.username || item.title,
-        }))
+          label: renderTitle('Người dùng'),
+          options: username.map(item => renderItem(item.username))
+        },
+        {
+          label: renderTitle('Địa điểm'),
+          options: titles.map(item => renderItem(item.title)),
         },
       ]);
   }, [listSearchUser]);
@@ -116,6 +123,24 @@ export default function Topbar(socket) {
     console.log(notifications);
   }, [deletedfriendRequestNotification]);
 
+  const renderItem = (title, key) => ({
+    value: title,
+    label: (
+        <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+        >
+          {title}
+        </div>
+    ),
+  });
+  const renderTitle = (title) => (
+      <span>
+    {title}
+  </span>
+  );
   const handleClickAcceptAddFriend = async (
     deletefriendRequestNotification
   ) => {
@@ -193,11 +218,22 @@ export default function Topbar(socket) {
       const res = await axios.get(
         `http://localhost:8800/api/user?username=${usernameSearch.current.value}`
       );
+      navigate(`/newfeed/${usernameSearch.current.value}`);
+    } catch (err) {
+      alert("Không tồn tại username");
+    }
+  };
+  const handleClickSearchPost = async (e) => {
+    try {
+      const res = await axios.get(
+          `http://localhost:8800/api/post?title=${usernameSearch.current.value}`
+      );
       navigate(`/profile/${usernameSearch.current.value}`);
     } catch (err) {
       alert("Không tồn tại username");
     }
   };
+
 
   const NotificationAlertContainer = () => {
     return (

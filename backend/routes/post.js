@@ -79,13 +79,17 @@ router.put("/:id/save", async (req, res) => {
 
 //get a post
 router.get("/:id", async (req, res) => {
+  const postTitle = req.params.title;
   try {
-    const post = await Post.findById(req.params.id);
+    const post = postId
+       ? await Post.findById(req.params.id)
+        : await Post.findOne({ title: postTitle });
     res.status(200).json(post);
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
 
 //get timeline posts
 router.get("/timeline/:id", async (req, res) => {
