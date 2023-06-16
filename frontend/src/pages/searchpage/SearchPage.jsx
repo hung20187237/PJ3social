@@ -10,6 +10,7 @@ import { useContext, useEffect, useState, useRef } from "react";
 import Post from "../../components/post/Post";
 import { Context } from "../../context/Context";
 import axios from "axios";
+import SelectFloat from '../../components/FloatingLabel/SelectFloat';
 
 
 
@@ -141,6 +142,7 @@ export default function SearchPage(filter) {
                         </div>}
                     </div>
                 </div>
+                <SelectFloat dataSelect={SliderData} label={'Tiêu chí'}/>
             </div>
         );
     };

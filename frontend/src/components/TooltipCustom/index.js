@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { TooltipCuss } from '../../../containers/Profile/components/ConfirmProfileInformation/styles';
+import { TooltipCuss } from './styles';
 
 const TooltipCustom = ({ name, toolTip }) => {
   const myElementRef = useRef(null);

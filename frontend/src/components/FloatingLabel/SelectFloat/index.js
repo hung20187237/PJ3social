@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Empty, Select, Space, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Floating from '../Floatting';
-import { CardOption, ListButton, OptionCus, SelectFloatStyle, SpaceCus } from './style';
-import iconArrowDropdown from '../../../../images/icon_arrow_dropdown.svg';
+import { CardOption, ListButton, SelectFloatStyle, SpaceCus } from './style';
+import iconArrowDropdown from '../../../images/icon_arrow_dropdown.svg';
 import { RedStar } from '../styled';
 import ButtonCircle from '../../ButtonCircle';
 import Button from '../../Button';
@@ -78,7 +78,7 @@ const SelectFloat = ({
         >
           {dataSelect.map(item => (
             <Option
-              value={item.value}
+              value={item.title}
               label={item.label}
               style={style || { height: '40px', display: 'flex', alignItems: 'center' }}
             >
@@ -142,13 +142,13 @@ const SelectFloat = ({
         >
           {dataSelect.map(item => (
             <Option
-              value={item.value}
+              value={item.title}
               label={item.label}
               style={style || { height: '40px', display: 'flex', alignItems: 'center' }}
             >
               <CardOption className="OptionCus">
                 <TooltipCustom name={item.label} />
-                {isIcon && item.value !== -1 && (
+                {isIcon && item.title !== -1 && (
                   <ListButton className="listButton">
                     <SpaceCus>
                       {titleEdit && checkEdit && (
@@ -159,7 +159,7 @@ const SelectFloat = ({
                           overlayStyle={{ maxWidth: 500 }}
                         >
                           <Button
-                            style={{ display: item.value === -1 ? 'none' : 'display' }}
+                            style={{ display: item.title === -1 ? 'none' : 'display' }}
                             btnType="btn-disable"
                             shape="circle"
                             iconName={item.totalCustomer && item.totalCustomer > 0 ? 'editTypeConfigGray' : 'edit'}
@@ -179,7 +179,7 @@ const SelectFloat = ({
                           overlayStyle={{ maxWidth: 500 }}
                         >
                           <Button
-                            style={{ display: item.value === -1 ? 'none' : 'display' }}
+                            style={{ display: item.title === -1 ? 'none' : 'display' }}
                             btnType="btn-disable"
                             shape="circle"
                             iconName={item.totalCustomer && item.totalCustomer > 0 ? 'delete-gray' : 'delete'}
