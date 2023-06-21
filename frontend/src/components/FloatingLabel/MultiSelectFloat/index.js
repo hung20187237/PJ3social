@@ -77,7 +77,7 @@ const MultiSelectFloat = ({
           >
             {isIcon && item.value !== -1 ? (
               <CardOption className="OptionCus">
-                <div style={{ width: '100%' }}>{item.label}</div>
+                <div style={{ width: '100%' }}>{item.title}</div>
                 <ListButton className="listButton">
                   <SpaceCus>
                     {titleEdit && checkEdit && (
@@ -124,7 +124,7 @@ const MultiSelectFloat = ({
                 </ListButton>
               </CardOption>
             ) : (
-              <>{item.label}</>
+              <>{item.title}</>
             )}
           </Option>
         ))}

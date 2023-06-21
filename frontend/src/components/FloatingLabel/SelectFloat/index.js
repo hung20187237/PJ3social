@@ -78,12 +78,12 @@ const SelectFloat = ({
         >
           {dataSelect.map(item => (
             <Option
-              value={item.title}
-              label={item.label}
+              value={item.value}
+              label={item.title}
               style={style || { height: '40px', display: 'flex', alignItems: 'center' }}
             >
               <CardOption className="OptionCus">
-                <TooltipCustom name={item.label} />
+                <TooltipCustom name={item.title} />
 
                 {isIcon && (
                   <ListButton className="listButton">
@@ -142,13 +142,13 @@ const SelectFloat = ({
         >
           {dataSelect.map(item => (
             <Option
-              value={item.title}
-              label={item.label}
+              value={item.value}
+              label={item.title}
               style={style || { height: '40px', display: 'flex', alignItems: 'center' }}
             >
               <CardOption className="OptionCus">
-                <TooltipCustom name={item.label} />
-                {isIcon && item.title !== -1 && (
+                <TooltipCustom name={item.title} />
+                {isIcon && item.value !== -1 && (
                   <ListButton className="listButton">
                     <SpaceCus>
                       {titleEdit && checkEdit && (
@@ -159,7 +159,7 @@ const SelectFloat = ({
                           overlayStyle={{ maxWidth: 500 }}
                         >
                           <Button
-                            style={{ display: item.title === -1 ? 'none' : 'display' }}
+                            style={{ display: item.value === -1 ? 'none' : 'display' }}
                             btnType="btn-disable"
                             shape="circle"
                             iconName={item.totalCustomer && item.totalCustomer > 0 ? 'editTypeConfigGray' : 'edit'}
@@ -179,7 +179,7 @@ const SelectFloat = ({
                           overlayStyle={{ maxWidth: 500 }}
                         >
                           <Button
-                            style={{ display: item.title === -1 ? 'none' : 'display' }}
+                            style={{ display: item.value === -1 ? 'none' : 'display' }}
                             btnType="btn-disable"
                             shape="circle"
                             iconName={item.totalCustomer && item.totalCustomer > 0 ? 'delete-gray' : 'delete'}

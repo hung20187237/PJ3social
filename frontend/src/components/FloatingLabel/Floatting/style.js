@@ -25,7 +25,7 @@ export const FloatingLabel = styled(Label)`
   width: auto;
   height: auto;
   height: 10px;
-  background-color: #EEFBFF;
+  background-color: #ffffff;
   top: -9px;
   color: #000000;
   font-size: 12px !important;

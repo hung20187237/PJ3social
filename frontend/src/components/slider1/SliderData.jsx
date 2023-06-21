@@ -2,17 +2,17 @@ export const SliderData = [
   {
     image:'https://tse3.mm.bing.net/th?id=OIP.1VVJw8phxbSEdUe_mWalAgHaE8&pid=Api&P=0&w=250&h=167',
     title : 'Hẹn hò',
-    value : 'Henho'
+    value : 'Hẹn hò'
   },
   {
     image:'https://images.foody.vn/images/foody-lady-hau-dining-cruise-819-635554497718776186.jpg',
     title : 'Sống ảo',
-    value : 'Songao'
+    value : 'Sống ảo'
   },
   {
     image:'https://toidicafe.vn/static/images/purpose/chill-1647441264959.jpeg?w=960',
     title : 'Sang chảnh',
-    value : 'Sangchanh'
+    value : 'Sang chảnh'
   },
   {
     image:'https://vcdn-ngoisao.vnecdn.net/2019/07/03/a-jpeg-7006-1562146537.jpg',
