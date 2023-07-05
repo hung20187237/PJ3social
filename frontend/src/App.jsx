@@ -27,7 +27,7 @@ function App() {
         <Route path="/messenger" element={user ? <Messenger /> : <Login/>}/>
         <Route path="/review" element={<Review />} />
         <Route path="/newfeed" element={<Newfeed />} />
-        <Route path="/searchpage" element={<SearchPage/>} />
+        <Route path="/searchpage/:value/:id" element={<SearchPage />} />
       </Routes>
 
     </Router>

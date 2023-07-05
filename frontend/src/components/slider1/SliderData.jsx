@@ -17,16 +17,16 @@ export const SliderData = [
   {
     image:'https://vcdn-ngoisao.vnecdn.net/2019/07/03/a-jpeg-7006-1562146537.jpg',
     title : 'Đường phố',
-    value : 'Đuongpho'
+    value : 'Đường phố'
   },
   {
     image:'https://asiana-plaza.com/wp-content/uploads/2021/01/nha-hang-tiec-cuoi-dep-quan-tan-phu-tphcm-asiana-plaza-768x512.jpg',
     title: 'Tiệc tùng',
-    value : 'Tiectung'
+    value : 'Tiệc tùng'
   },
   {
     image:'https://vcdn-giadinh.vnecdn.net/2022/03/19/tiet-kiem-8758-1647681799.jpg',
     title: 'Tiết kiệm',
-    value : 'Tietkiem'
+    value : 'Tiết kiệm'
   }
 ];
