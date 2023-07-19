@@ -13,6 +13,8 @@ import { Context } from "./context/Context";
 import Review from "./pages/review/Review";
 import Newfeed from "./pages/newfeed/Newfeed";
 import SearchPage from "./pages/searchpage/SearchPage";
+import SearchPost from "./pages/searchpost/SearchPost";
+
 
 function App() {
 
@@ -28,6 +30,7 @@ function App() {
         <Route path="/review" element={<Review />} />
         <Route path="/newfeed" element={<Newfeed />} />
         <Route path="/searchpage/:value/:id" element={<SearchPage />} />
+        <Route path="/searchPost/:value/:id" element={<SearchPost />} />
       </Routes>
 
     </Router>

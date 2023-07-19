@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Empty, Select, Tooltip } from 'antd';
-import { t } from 'i18next';
 import Floating from '../Floatting';
 import { CardOption, ListButton, SelectFloatStyle, SpaceCus } from './style';
 import Button from '../../Button';
@@ -38,7 +37,7 @@ const MultiSelectFloat = ({
   return (
     <Floating label={label} value={selectValue || valueSelect}>
       <SelectFloatStyle
-        notFoundContent={<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('common.noData')} />}
+        notFoundContent={<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={'no Data'} />}
         mode="multiple"
         onChange={value => {
           if (value.includes('all')) {

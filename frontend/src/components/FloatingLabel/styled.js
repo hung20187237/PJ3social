@@ -91,6 +91,7 @@ export const FlWrapper = styled.div`
       -webkit-background-clip: padding-box;
       background-clip: padding-box;
       border-radius: 8px;
+      border: 1px solid #7f7e7e;
       z-index: 2;
       font-size: 14px;
       box-shadow: none !important;
@@ -203,6 +204,7 @@ const inputStyle = `
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
   border-radius: 8px;
+  border: 1px solid #7f7e7e;
   z-index: 2;
   font-size: 14px;
   box-shadow: none !important;

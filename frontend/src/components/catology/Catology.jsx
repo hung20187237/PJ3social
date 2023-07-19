@@ -6,10 +6,9 @@ import "./Catology.css"
 
 export default function Catology() {
   let navigate = useNavigate()
-  const handleClickAccount = (e) =>{
-    navigate('/searchpage')
-  }
-
+  const handleDetailClick = (kv, value) => {
+    navigate(`/searchpage/${kv}/${value}`);
+  };
   return (
     <div className='bodyCatology'>
         <span className='titleslider'>Danh Mục</span>
@@ -17,7 +16,7 @@ export default function Catology() {
         <div className='bodycardCatology'>
           {CatologyData.map((list) => {
             return(
-                <div className='cardCatology' onClick={ handleClickAccount}>
+                <div className='cardCatology' onClick={() => handleDetailClick('dm', list.value)}>
                     <img src={list.image} alt={list.title} />
                     <span>- {list.title} -</span>
                 </div>

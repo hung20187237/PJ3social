@@ -6,18 +6,22 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../../context/Context";
 import axios from "axios";
+import { Form } from "antd";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Topbar from "../../components/topbar/Topbar";
 import BasicRating from "../../components/star/star";
 import { Editor } from "@tinymce/tinymce-react";
-import FbImageLibrary from "react-fb-image-grid";
+import ReactImageGrid from "@cordelia273/react-image-grid";
 import SelectFloat from "../../components/FloatingLabel/SelectFloat";
 import { SliderSlickData } from "../../components/slider2/SliderSlickData";
 import { SliderData } from "../../components/slider1/SliderData";
 import { CatologyData } from "../../components/catology/CatologyData";
+import Floating from "../../components/FloatingLabel/Input/index";
+import { FormCustom } from "./styles";
 
 export default function Review() {
   const { user } = useContext(Context);
+  const [form] = Form.useForm();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const desc = useRef();
   const title = useRef();
@@ -30,17 +34,17 @@ export default function Review() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
-    const newPost = {
-      userId: user._id,
-      desc: desc.current.getContent(),
-      title: title.current.value,
-      rating: rating.current,
-      place: place.current.value,
-      tagkv: filterValue.kv,
-      tagtc: filterValue.tc,
-      tagdm: filterValue.dm,
-    };
+    const value = await form.validateFields();
+      const newPost = {
+        userId: user._id,
+        desc: desc.current.getContent(),
+        title: value.name,
+        rating: rating.current,
+        place: value.place,
+        tagkv: filterValue.kv,
+        tagtc: filterValue.tc,
+        tagdm: filterValue.dm,
+      };
     if (mutifile) {
       const data = new FormData();
       let fileName = [];
@@ -61,13 +65,6 @@ export default function Review() {
       await axios.post("http://localhost:8800/api/post", newPost);
       window.location.reload();
     } catch (err) {}
-  };
-
-  const log = (e) => {
-    e.preventDefault();
-    if (desc.current) {
-      console.log(desc.current.getContent());
-    }
   };
 
   const MutipleFileChange = (files) => {
@@ -142,7 +139,7 @@ export default function Review() {
             <hr className="reviewHr" />
             {mutiupload && (
               <div className="reviewImgContainer">
-                {<FbImageLibrary images={mutiupload} countFrom={5} />}
+                {<ReactImageGrid images={mutiupload} countFrom={5} />}
                 <CancelIcon
                   className="reviewCancelImg"
                   onClick={() => setMutiupload(null)}
@@ -194,22 +191,44 @@ export default function Review() {
             </form>
           </div>
           <div className="reviewRight">
-            <form className="reviewBox">
-              <h2>Thông tin địa điểm :</h2>
-              <input
-                placeholder="Tên"
-                type=""
-                required
-                className="reviewInput"
-                ref={title}
-              />
-              <input
-                placeholder="Địa điểm"
-                type="location"
-                required
-                className="reviewInput"
-                ref={place}
-              />
+            <FormCustom form={form} validateTrigger={["onBlur", "onChange"]}>
+              <h2 style={{ width: "80%", marginBottom: "24px" }}>
+                Thông tin địa điểm :
+              </h2>
+
+              <Form.Item
+                style={{
+                  width: "80%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+                name={"name"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Xin vui lòng nhập tên quán ăn.",
+                  },
+                ]}
+              >
+                <Floating label={"Tên"} isRequired />
+              </Form.Item>
+
+              <Form.Item
+                style={{
+                  width: "80%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+                name={"place"}
+                rules={[
+                  {
+                    required: true,
+                    message: "Xin vui lòng nhập địa điểm.",
+                  },
+                ]}
+              >
+                <Floating label={"Địa điểm"} isRequired />
+              </Form.Item>
               <div className="reviewInput">
                 <SelectFloat
                   dataSelect={SliderSlickData}
@@ -240,7 +259,7 @@ export default function Review() {
                   }}
                 />
               </div>
-            </form>
+            </FormCustom>
           </div>
         </div>
       </div>

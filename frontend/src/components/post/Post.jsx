@@ -12,7 +12,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import BasicStar from "../starone/star";
 import BasicRating from "../../components/star/star";
 import RoomIcon from "@mui/icons-material/Room";
-import FbImageLibrary from "react-fb-image-grid";
+import ReactImageGrid from "@cordelia273/react-image-grid";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ReplyIcon from "@mui/icons-material/Reply";
 
@@ -414,7 +414,7 @@ export default function Post({ post, user1 }) {
               dangerouslySetInnerHTML={{ __html: body }}
             />
             <div className="postcenterimg">
-              {post.img && <FbImageLibrary images={listUrl} countFrom={5} />}
+              {post.img && <ReactImageGrid images={listUrl} countFrom={5} />}
             </div>
           </div>
 
