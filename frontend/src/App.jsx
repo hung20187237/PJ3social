@@ -30,7 +30,8 @@ function App() {
         <Route path="/review" element={<Review />} />
         <Route path="/newfeed" element={<Newfeed />} />
         <Route path="/searchpage/:value/:id" element={<SearchPage />} />
-        <Route path="/searchPost/:value/:id" element={<SearchPost />} />
+        <Route path="/searchPost/:postid" element={<SearchPost />} />
+        <Route path="/searchPost/:postid" element={<SearchPost />} />
       </Routes>
 
     </Router>

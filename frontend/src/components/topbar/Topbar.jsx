@@ -26,7 +26,6 @@ export default function Topbar(socket) {
   const [postId, setPostId] = useState("");
   const [listSearchUser, setListSearchUser] = useState([]);
   const [optionUser, setOptionUser] = useState([]);
-  const usernameSearch = useRef();
   const scrollRef = useRef();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -94,13 +93,16 @@ export default function Topbar(socket) {
           options: username.map(item => renderItem(item.username))
         },
         {
-          label: renderTitle('Địa điểm'),
-          options: titles.map(item => renderItem(item.title)),
+          label: renderTitle('Tên quán'),
+          options: titles.map(item => renderItem(item.title, item._id)),
+        },
+        {
+          label: renderTitle('Địa chỉ'),
+          options: titles.map(item => renderItem(item.place, item._id)),
         },
       ]);
   }, [listSearchUser]);
-  console.log(listSearchUser)
-  console.log(optionUser);
+
 
   useEffect(() => {
     newNotification && setNotifications((prev) => [...prev, newNotification]);
@@ -124,7 +126,7 @@ export default function Topbar(socket) {
   }, [deletedfriendRequestNotification]);
 
   const renderItem = (title, key) => ({
-    value: title,
+    value: key || title,
     label: (
         <div
             style={{
@@ -213,24 +215,14 @@ export default function Topbar(socket) {
     navigate("/");
   };
 
-  const handleClickSearch = async (e) => {
+  const handleClickSearch = async (keysearch) => {
     try {
       const res = await axios.get(
-        `http://localhost:8800/api/user?username=${usernameSearch.current.value}`
+        `http://localhost:8800/api/user?username=${keysearch}`
       );
-      navigate(`/newfeed/${usernameSearch.current.value}`);
+      navigate(`/profile/${keysearch}`);
     } catch (err) {
-      alert("Không tồn tại username");
-    }
-  };
-  const handleClickSearchPost = async (e) => {
-    try {
-      const res = await axios.get(
-          `http://localhost:8800/api/post?title=${usernameSearch.current.value}`
-      );
-      navigate(`/profile/${usernameSearch.current.value}`);
-    } catch (err) {
-      alert("Không tồn tại username");
+      navigate(`/searchPost/${keysearch}`);
     }
   };
 
@@ -365,7 +357,11 @@ export default function Topbar(socket) {
             style={{ width: '90%' }}
             options={optionUser}
             className="searchbar"
-            onSelect={handleClickSearch}
+            onSelect={(e) => {
+              console.log(e)
+              handleClickSearch(e)
+              setTextSearch('');
+            }}
           >
             <input
               style={{ width: '100%' }}
@@ -374,7 +370,7 @@ export default function Topbar(socket) {
               onChange={(e) => {
                 setTextSearch(e.target.value);
               }}
-              ref={usernameSearch}
+              value={textSearch}
             />
           </AutoComplete>
       

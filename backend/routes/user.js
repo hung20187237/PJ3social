@@ -62,7 +62,8 @@ router.get("/textSearch/", async (req, res) => {
   try {
     const users = await User.find({ username: { $regex: searchText } });
     const posts = await Post.find({ title: { $regex: searchText } });
-    const result = [...users, ...posts]
+    const postsByPlace = await Post.find({ place: { $regex: searchText } });
+    const result = [...users, ...posts, ...postsByPlace]
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: 'Failed to search users' });

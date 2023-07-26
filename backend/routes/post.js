@@ -80,9 +80,10 @@ router.put("/:id/save", async (req, res) => {
 //get a post
 router.get("/:id", async (req, res) => {
   const postTitle = req.params.title;
+  const postId = req.params.id;
   try {
     const post = postId
-       ? await Post.findById(req.params.id)
+       ? await Post.findById(postId)
         : await Post.findOne({ title: postTitle });
     res.status(200).json(post);
   } catch (err) {

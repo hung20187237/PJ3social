@@ -35,6 +35,7 @@ export default function Post({ post, user1 }) {
   const reply = useRef();
   const body = post.desc;
   const listUrl = post.img.map((img) => PF + img);
+  console.log(post);
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
