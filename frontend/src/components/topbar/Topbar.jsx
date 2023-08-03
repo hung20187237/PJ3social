@@ -1,7 +1,7 @@
 import "./Topbar.css";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useContext, useRef, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
@@ -84,25 +84,29 @@ export default function Topbar(socket) {
   }, [textSearch]);
 
   useEffect(() => {
-    const username = listSearchUser.filter(user => user.username);
-    const titles = listSearchUser.filter(user => user.title);
-    console.log(username, titles)
-      setOptionUser([
-        {
-          label: renderTitle('Người dùng'),
-          options: username.map(item => renderItem(item.username))
-        },
-        {
-          label: renderTitle('Tên quán'),
-          options: titles.map(item => renderItem(item.title, item._id)),
-        },
-        {
-          label: renderTitle('Địa chỉ'),
-          options: titles.map(item => renderItem(item.place, item._id)),
-        },
-      ]);
+    const username = listSearchUser.filter((user) => user.username);
+    const titles = listSearchUser.filter((user) => user.title);
+    const restaurants = listSearchUser.filter((res) => res.name);
+    console.log(username, titles);
+    setOptionUser([
+      {
+        label: renderTitle("Người dùng"),
+        options: username.map((item) =>
+          renderItem(item, item.username, item._id)
+        ),
+      },
+      {
+        label: renderTitle("Địa chỉ"),
+        options: titles.map((item) => renderItem(item, item.place, item._id)),
+      },
+      {
+        label: renderTitle("Quán Ăn"),
+        options: restaurants.map((item) =>
+          renderItem(item, item.name, item._id)
+        ),
+      },
+    ]);
   }, [listSearchUser]);
-
 
   useEffect(() => {
     newNotification && setNotifications((prev) => [...prev, newNotification]);
@@ -125,24 +129,21 @@ export default function Topbar(socket) {
     console.log(notifications);
   }, [deletedfriendRequestNotification]);
 
-  const renderItem = (title, key) => ({
-    value: key || title,
+  const renderItem = (item, title, key) => ({
+    value: key || item._id,
     label: (
-        <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-        >
-          {title}
-        </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        {title}
+      </div>
     ),
+    categoryid: (item.username && 1) || (item.place && 2) || (item.name && 3),
   });
-  const renderTitle = (title) => (
-      <span>
-    {title}
-  </span>
-  );
+  const renderTitle = (title) => <span>{title}</span>;
   const handleClickAcceptAddFriend = async (
     deletefriendRequestNotification
   ) => {
@@ -215,17 +216,16 @@ export default function Topbar(socket) {
     navigate("/");
   };
 
-  const handleClickSearch = async (keysearch) => {
-    try {
-      const res = await axios.get(
-        `http://localhost:8800/api/user?username=${keysearch}`
-      );
-      navigate(`/profile/${keysearch}`);
-    } catch (err) {
-      navigate(`/searchPost/${keysearch}`);
+  const handleClickSearch = async (value, option) => {
+    console.log("keysearch", value, option);
+    if (option.categoryid === 1) {
+      navigate(`/profile/${value}`);
+    } else if (option.categoryid === 2) {
+      navigate(`/searchPost/${value}`);
+    } else {
+      navigate(`/searchRestaurant/${value}`);
     }
   };
-
 
   const NotificationAlertContainer = () => {
     return (
@@ -354,17 +354,13 @@ export default function Topbar(socket) {
           <SearchIcon className="searchIcon" onClick={handleClickSearch} />
           <AutoComplete
             popupClassName="certain-category-search-dropdown"
-            style={{ width: '90%' }}
+            style={{ width: "90%" }}
             options={optionUser}
             className="searchbar"
-            onSelect={(e) => {
-              console.log(e)
-              handleClickSearch(e)
-              setTextSearch('');
-            }}
+            onSelect={handleClickSearch}
           >
             <input
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
               placeholder="Search for friends"
               className="searchInput"
               onChange={(e) => {
@@ -373,7 +369,6 @@ export default function Topbar(socket) {
               value={textSearch}
             />
           </AutoComplete>
-      
         </div>
       </div>
       <div className="topbarRight">

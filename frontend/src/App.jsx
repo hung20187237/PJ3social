@@ -14,6 +14,7 @@ import Review from "./pages/review/Review";
 import Newfeed from "./pages/newfeed/Newfeed";
 import SearchPage from "./pages/searchpage/SearchPage";
 import SearchPost from "./pages/searchpost/SearchPost";
+import SearchRes from "./pages/searchRestaurant/SearchRes";
 
 
 function App() {
@@ -31,7 +32,7 @@ function App() {
         <Route path="/newfeed" element={<Newfeed />} />
         <Route path="/searchpage/:value/:id" element={<SearchPage />} />
         <Route path="/searchPost/:postid" element={<SearchPost />} />
-        <Route path="/searchPost/:postid" element={<SearchPost />} />
+        <Route path="/searchRestaurant/:resId" element={<SearchRes />} />
       </Routes>
 
     </Router>
