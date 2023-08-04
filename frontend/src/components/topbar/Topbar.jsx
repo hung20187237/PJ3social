@@ -360,7 +360,7 @@ export default function Topbar(socket) {
             onSelect={handleClickSearch}
           >
             <input
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: "30px" }}
               placeholder="Search for friends"
               className="searchInput"
               onChange={(e) => {

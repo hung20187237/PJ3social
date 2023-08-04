@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const resName = req.params.name;
   const resId = req.params.id;
+  console.log(resId);
   try {
     const restaurant = resId
        ? await Restaurant.findById(resId)
@@ -28,17 +29,17 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//get timeline posts
+//get save post
 router.get("/reviewposts/:id", async (req, res) => {
-  const reviewPosts = [];
+  console.log(req.params.id);
   try {
     const currentRestaurant = await Restaurant.findById(req.params.id);
-    await Post.map((saveid) => {
-      if(saveid.title === currentRestaurant.name){
-        return reviewPosts.push(Post)
-      }
-    });
-    res.status(200).json(reviewPosts);
+    const savedposts = await Promise.all(
+      Post.map((saveid) => {
+        return saveid.title === currentRestaurant.name
+      })
+    );
+    res.status(200).json(savedposts)
   } catch (err) {
     res.status(500).json(err);
   }

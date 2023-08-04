@@ -1,8 +1,24 @@
-.newfeedContainer{
-    display: flex;
-    width: 100%;
+.newfeedContainer {
+  display: flex;
+  width: 100%;
 }
-.bodyNewFeed{
-    padding: 10px;
-    flex:6.5
+.bodyNewFeed {
+  padding: 10px;
+  flex: 6.5;
+}
+.Place_resTop__1xCCM {
+  padding: 8px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+.Place_resTop__1xCCM .Place_address__2xVBb {
+    font-size: 16px;
+    padding-left: 8px;
+}
+.Place_resTop__1xCCM .Place_intro__2uQsk {
+    margin-bottom: 4px;
+    margin-right: 40px;
 }

@@ -2,6 +2,7 @@ const User = require("../models/User");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const Post = require("../models/Post");
+const Restaurant = require("../models/Restaurant");
 
 //update user
 router.put("/:id", async (req, res) => {
@@ -61,9 +62,9 @@ router.get("/textSearch/", async (req, res) => {
   const searchText = req.query.searchText;
   try {
     const users = await User.find({ username: { $regex: searchText } });
-    const posts = await Post.find({ title: { $regex: searchText } });
     const postsByPlace = await Post.find({ place: { $regex: searchText } });
-    const result = [...users, ...posts, ...postsByPlace]
+    const restaurant = await Restaurant.find({ name: { $regex: searchText } });
+    const result = [...users, ...postsByPlace, ...restaurant]
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: 'Failed to search users' });
