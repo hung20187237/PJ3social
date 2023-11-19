@@ -85,7 +85,6 @@ export default function Rightbar({ user, username }) {
     }
 
   }, [user]);
-  console.log(saveposts)
 
   useEffect(() => {
     const getFriendRequest = async () => {
@@ -205,7 +204,7 @@ export default function Rightbar({ user, username }) {
       console.log(err)
     }
   };
-  console.log(saveposts)
+
   const ProfileUpdateRightbar = () => {
     return (
       <>

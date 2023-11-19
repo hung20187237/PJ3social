@@ -31,6 +31,8 @@ export default function Topbar(socket) {
 
   let navigate = useNavigate();
 
+  console.log(optionUser)
+
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [notifications]);

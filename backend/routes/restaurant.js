@@ -18,7 +18,6 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const resName = req.params.name;
   const resId = req.params.id;
-  console.log(resId);
   try {
     const restaurant = resId
        ? await Restaurant.findById(resId)
@@ -31,14 +30,9 @@ router.get("/:id", async (req, res) => {
 
 //get save post
 router.get("/reviewposts/:id", async (req, res) => {
-  console.log(req.params.id);
   try {
     const currentRestaurant = await Restaurant.findById(req.params.id);
-    const savedposts = await Promise.all(
-      Post.map((saveid) => {
-        return saveid.title === currentRestaurant.name
-      })
-    );
+    const savedposts = await Post.find({ title: currentRestaurant.name });
     res.status(200).json(savedposts)
   } catch (err) {
     res.status(500).json(err);

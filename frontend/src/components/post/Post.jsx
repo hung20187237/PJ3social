@@ -5,7 +5,6 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { FacebookProvider, Comments } from "react-facebook";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -35,7 +34,7 @@ export default function Post({ post, user1 }) {
   const reply = useRef();
   const body = post.desc;
   const listUrl = post.img.map((img) => PF + img);
-  console.log(post);
+  console.log(listUrl);
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
