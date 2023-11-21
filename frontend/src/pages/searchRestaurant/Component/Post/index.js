@@ -3,22 +3,24 @@ import {PostItem, PostItemLeft} from "../../styles";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import {
+    ItemVote,
     PostItemBody,
     PostItemRight,
     PostItemRightContent,
     PostItemText,
     PostItemTitle,
     PostUserName,
-    PostUserVote, ReactImageGridCustom
+    PostUserVote, ReactImageGridCustom, SeeMore, TextItemVote
 } from "./styles";
 import {format} from "timeago.js";
-import ReactImageGrid from "@cordelia273/react-image-grid";
+import {Popover, Rate} from "antd";
 
 const PostRes = ({post}) => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     const listUrl = post.img.map((img) => PF + img);
     const [user, setUser] = useState({});
+    const [showMore, setShowMore] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -29,6 +31,31 @@ const PostRes = ({post}) => {
         };
         fetchUser();
     }, []);
+
+    const content = (
+        <div>
+            <ItemVote>
+                <TextItemVote>Vị trí</TextItemVote>
+                <Rate disabled defaultValue={4} />
+            </ItemVote>
+            <ItemVote>
+                <TextItemVote>Không gian</TextItemVote>
+                <Rate disabled defaultValue={5} />
+            </ItemVote>
+            <ItemVote>
+                <TextItemVote>Đồ ăn</TextItemVote>
+                <Rate disabled defaultValue={4} />
+            </ItemVote>
+            <ItemVote>
+                <TextItemVote>Phục vụ</TextItemVote>
+                <Rate disabled defaultValue={3} />
+            </ItemVote>
+            <ItemVote>
+                <TextItemVote>Giá cả</TextItemVote>
+                <Rate disabled defaultValue={4} />
+            </ItemVote>
+        </div>
+    );
 
     return (
         <PostItem>
@@ -53,16 +80,20 @@ const PostRes = ({post}) => {
                             <span className="postDate">{format(post.createdAt)}</span>
                         </PostUserName>
                         <PostUserVote>
-                            <span>
-                                <b>{post.rating}</b>
-                            </span>
+                            <Popover content={content} title="Đánh giá" placement="topRight" arrow={true}>
+                                <span>
+                                    <b>{post.rating}</b>
+                                </span>
+                            </Popover>
                         </PostUserVote>
                     </PostItemTitle>
                     <PostItemBody>
-                        <div
+                        <PostItemText
                             className="postText"
                             dangerouslySetInnerHTML={{ __html: post.desc }}
+                            show={showMore}
                         />
+                        <SeeMore onClick={() => setShowMore(!showMore)}>{showMore ? 'Rút gọn' : 'Xem thêm'}</SeeMore>
                         <div className="postcenterimg">
                             {post.img && <ReactImageGridCustom images={listUrl} />}
                         </div>

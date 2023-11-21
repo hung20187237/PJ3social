@@ -3,10 +3,10 @@ import PermMediaIcon from "@mui/icons-material/PermMedia";
 import RoomIcon from "@mui/icons-material/Room";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../../context/Context";
 import axios from "axios";
-import { Form } from "antd";
+import {Form, Rate} from "antd";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Topbar from "../../components/topbar/Topbar";
 import BasicRating from "../../components/star/star";
@@ -18,14 +18,20 @@ import { SliderData } from "../../components/slider1/SliderData";
 import { CatologyData } from "../../components/catology/CatologyData";
 import Floating from "../../components/FloatingLabel/Input/index";
 import { FormCustom } from "./styles";
+import {ItemVote, TextItemVote} from "../searchRestaurant/Component/Post/styles";
 
 export default function Review() {
   const { user } = useContext(Context);
   const [form] = Form.useForm();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const desc = useRef();
-  const title = useRef();
-  const rating = useRef(4);
+  const rating = useRef({
+    place: 4,
+    space: 4,
+    food: 4,
+    serve: 4,
+    price: 4,
+  });
   const place = useRef();
   const [mutifile, setMutifile] = useState("");
   const [mutiupload, setMutiupload] = useState(null);
@@ -45,6 +51,7 @@ export default function Review() {
         tagtc: filterValue.tc,
         tagdm: filterValue.dm,
       };
+    console.log(newPost)
     if (mutifile) {
       const data = new FormData();
       let fileName = [];
@@ -67,6 +74,7 @@ export default function Review() {
     } catch (err) {}
   };
 
+
   const MutipleFileChange = (files) => {
     const listImg = Object.values(files);
     const listUrl = listImg.map((img) => URL.createObjectURL(img));
@@ -88,7 +96,28 @@ export default function Review() {
           <div className="reviewLeft">
             <div className="starRating">
               <h2>Xếp hạng của bạn :</h2>
-              <BasicRating ref={rating} />
+              <div style={{width: '420px'}}>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Vị trí</TextItemVote>
+                  <BasicRating ref={rating.current} type={'place'}/>
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Không gian</TextItemVote>
+                  <BasicRating ref={rating.current} type={'space'}/>
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Đồ ăn</TextItemVote>
+                  <BasicRating ref={rating.current} type={'food'}/>
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Phục vụ</TextItemVote>
+                  <BasicRating ref={rating.current} type={'serve'} />
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Giá cả</TextItemVote>
+                  <BasicRating ref={rating.current} type={'price'}/>
+                </ItemVote>
+              </div>
             </div>
 
             <div className="reviewTop">
@@ -192,7 +221,7 @@ export default function Review() {
           </div>
           <div className="reviewRight">
             <FormCustom form={form} validateTrigger={["onBlur", "onChange"]}>
-              <h2 style={{ width: "80%", marginBottom: "24px" }}>
+              <h2 style={{ width: "80%", paddingBottom: "24px", margin: 'auto' }}>
                 Thông tin địa điểm :
               </h2>
 

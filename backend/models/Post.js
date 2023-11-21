@@ -36,7 +36,14 @@ const PostSchema = new mongoose.Schema(
       type: String,
     },
     rating: {
-      type: Number, 
+      type: Object,
+      properties: {
+          place: {type: Number},
+          space: {type: Number},
+          food: {type: Number},
+          serve: {type: Number},
+          price: {type: Number},
+      }
     },
     place: {
       type: String,

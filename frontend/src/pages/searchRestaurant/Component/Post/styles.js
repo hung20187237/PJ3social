@@ -27,13 +27,22 @@ export const PostItemBody = styled.div`
 `;
 
 export const PostItemText = styled.div`
-  color: inherit;
-  padding: 5px 0;
-  white-space: pre-line;
-  font-size: 16px;
-  line-height: 24px;
-  word-break: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: ${props => (props.show ? 'unset' : '4')}; /* Số dòng tối đa hiển thị trước khi ẩn */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
 `;
+
+export const SeeMore = styled.div`
+  color: #f44336;
+  cursor: pointer;
+
+  :hover {
+    color: #f8a5a0;
+  }
+`;
+
 
 export const PostUserName = styled.div`
   display: flex;
@@ -84,4 +93,27 @@ export const ReactImageGridCustom = styled(ReactImageGrid)`
     grid-row: 1 / span 2;
   }
   
+`;
+
+export const ItemVote = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+`;
+export const TextItemVote = styled.div`
+  font-weight: 500;
+  margin-right: 10px;
+`;
+export const TextItem = styled.div`
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+  line-height: 32px;
+  overflow: hidden;
+  text-align: center;
+  color: #fff;
+  background: #e03;
+  border-radius: 50%;
+  margin-right: 10px;
 `;
