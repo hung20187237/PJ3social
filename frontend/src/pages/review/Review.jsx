@@ -3,10 +3,9 @@ import PermMediaIcon from "@mui/icons-material/PermMedia";
 import RoomIcon from "@mui/icons-material/Room";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../../context/Context";
-import axios from "axios";
-import { Form } from "antd";
+import {Form, Rate} from "antd";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Topbar from "../../components/topbar/Topbar";
 import BasicRating from "../../components/star/star";
@@ -17,15 +16,25 @@ import { SliderSlickData } from "../../components/slider2/SliderSlickData";
 import { SliderData } from "../../components/slider1/SliderData";
 import { CatologyData } from "../../components/catology/CatologyData";
 import Floating from "../../components/FloatingLabel/Input/index";
+import imgTest from "../../images/backgroundLogin.png";
 import { FormCustom } from "./styles";
+import {ItemVote, TextItemVote} from "../searchRestaurant/Component/Post/styles";
+import {mildKeywords, moderateKeywords, severeKeywords} from "./contant";
+import axios from 'axios';
+
 
 export default function Review() {
   const { user } = useContext(Context);
   const [form] = Form.useForm();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const desc = useRef();
-  const title = useRef();
-  const rating = useRef(4);
+  const rating = useRef({
+    place: 4,
+    space: 4,
+    food: 4,
+    serve: 4,
+    price: 4,
+  });
   const place = useRef();
   const [mutifile, setMutifile] = useState("");
   const [mutiupload, setMutiupload] = useState(null);
@@ -35,22 +44,27 @@ export default function Review() {
   const submitHandler = async (e) => {
     e.preventDefault();
     const value = await form.validateFields();
-      const newPost = {
-        userId: user._id,
-        desc: desc.current.getContent(),
-        title: value.name,
-        rating: rating.current,
-        place: value.place,
-        tagkv: filterValue.kv,
-        tagtc: filterValue.tc,
-        tagdm: filterValue.dm,
-      };
+    const resultDesc = checkCommunityStandards(desc.current.getContent());
+    const newPost = {
+      userId: user._id,
+      desc: '',
+      title: value.name,
+      rating: rating.current,
+      place: value.place,
+      tagkv: filterValue.kv,
+      tagtc: filterValue.tc,
+      tagdm: filterValue.dm,
+    };
+    if (resultDesc === 0) {
+      newPost.desc = desc.current.getContent();
+    }else {
+      alert(resultDesc)
+    }
+
     if (mutifile) {
       const data = new FormData();
       let fileName = [];
       [...mutifile].map((file) => data.append("images", file));
-
-      console.log(newPost);
       try {
         await axios
           .post("http://localhost:8800/api/mutiupload", data)
@@ -67,14 +81,98 @@ export default function Review() {
     } catch (err) {}
   };
 
+  const handleImageUpload = async (imageFile) => {
+    console.log(imageFile)
+    const data = new FormData();
+    data.append('image', imageFile[0]);
+    let choseImage = [];
+    const resultUpload = await axios({
+      method: "post",
+      url: "https://api.imgur.com/3/image",
+      headers: {
+        Authorization: `Client-ID 225600e2fe06d7b`,
+      },
+      data: data,
+    });
+    console.log(resultUpload);
+    // if (Array.isArray(imageFile)) {
+    //   const uploadArray = imageFile.map(async (item) => {
+    //     console.log(item);
+    //     const resultUpload = await axios({
+    //       method: "post",
+    //       url: "https://api.imgur.com/3/image",
+    //       headers: {
+    //         Authorization: `Client-ID 225600e2fe06d7b`,
+    //       },
+    //       data: item,
+    //     });
+    //     console.log(resultUpload); // bỏ hết then đi
+    //     if (resultUpload.status === 200) {
+    //       return resultUpload.data.data.link;
+    //     }
+    //   });
+    //   choseImage = await Promise.all(uploadArray);
+    // }
+    console.log(choseImage)
+
+    const apiUrl = 'https://api.sightengine.com/1.0/check-workflow.json';
+    const apiKey = 'HFVyXMsK2mo3DqavoGECiGhNbq'; // Thay thế bằng khóa API của bạn
+    const apiUser = '1777157158'; // Thay thế bằng thông tin tài khoản của bạn
+    const workflowId = 'wfl_fcYaLLijOa94P50zolWlw';
+
+    try {
+      const response = await axios.get(apiUrl, {
+        params: {
+          url: 'https://i.imgur.com/lm8vMnH.jpg',
+          workflow: workflowId,
+          api_user: apiUser,
+          api_secret: apiKey,
+        },
+      });
+
+      // Xử lý kết quả từ Sightengine
+      console.log(response.data.summary);
+      alert(response.data.summary.action);
+    } catch (error) {
+      // Xử lý lỗi
+      if (error.response) console.log(error.response.data);
+      else console.log(error.message);
+    }
+  };
+
+
   const MutipleFileChange = (files) => {
     const listImg = Object.values(files);
     const listUrl = listImg.map((img) => URL.createObjectURL(img));
-    console.log(listImg);
+    console.log(listUrl);
+    handleImageUpload(listImg)
     setFiles(files);
     setMutifile(listImg);
     setMutiupload(listUrl);
   };
+
+  function checkCommunityStandards(post) {
+    // Kiểm tra mức độ từ khóa lạm dụng trong nội dung bài viết
+    function checkKeywordLevel(content, keywords) {
+      return keywords.some(keyword => content.includes(keyword));
+    }
+
+    // Kiểm tra từ khóa lạm dụng
+    if (checkKeywordLevel(post.content, severeKeywords)) {
+      return "Bài viết chứa từ khóa lạm dụng nghiêm trọng.";
+    } else if (checkKeywordLevel(post.content, moderateKeywords)) {
+      return "Bài viết chứa từ khóa lạm dụng mức độ vừa.";
+    } else if (checkKeywordLevel(post.content, mildKeywords)) {
+      return "Bài viết chứa từ khóa lạm dụng nhẹ.";
+    }
+
+    return 0;
+  }
+
+
+
+
+
 
   return (
     <div className="review">
@@ -88,7 +186,28 @@ export default function Review() {
           <div className="reviewLeft">
             <div className="starRating">
               <h2>Xếp hạng của bạn :</h2>
-              <BasicRating ref={rating} />
+              <div style={{width: '420px'}}>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Vị trí</TextItemVote>
+                  <BasicRating ref={rating.current} type={'place'}/>
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Không gian</TextItemVote>
+                  <BasicRating ref={rating.current} type={'space'}/>
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Đồ ăn</TextItemVote>
+                  <BasicRating ref={rating.current} type={'food'}/>
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Phục vụ</TextItemVote>
+                  <BasicRating ref={rating.current} type={'serve'} />
+                </ItemVote>
+                <ItemVote>
+                  <TextItemVote style={{fontSize: '20px'}}>Giá cả</TextItemVote>
+                  <BasicRating ref={rating.current} type={'price'}/>
+                </ItemVote>
+              </div>
             </div>
 
             <div className="reviewTop">
@@ -192,7 +311,7 @@ export default function Review() {
           </div>
           <div className="reviewRight">
             <FormCustom form={form} validateTrigger={["onBlur", "onChange"]}>
-              <h2 style={{ width: "80%", marginBottom: "24px" }}>
+              <h2 style={{ width: "80%", paddingBottom: "24px", margin: 'auto' }}>
                 Thông tin địa điểm :
               </h2>
 

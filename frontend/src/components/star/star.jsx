@@ -16,7 +16,7 @@ function BasicRating(props, ref) {
 
   useEffect(() => {
     if (ref) {
-      ref.current = value;
+        ref[props.type] = value;
     }
   }, [ref]);
 
@@ -24,7 +24,7 @@ function BasicRating(props, ref) {
     <Box
       sx={{
         "& > legend": { mt: 2 },
-        width: 200,
+        width: 300,
         display: "flex",
         alignItems: "center",
       }}
@@ -32,11 +32,11 @@ function BasicRating(props, ref) {
       <Rating
         name="simple-controlled"
         value={props.rating ?? value}
-        style={{marginBottom: '-5px'}}
+        style={{marginBottom: '-5px', fontSize: '2.5rem'}}
         onChange={(event, newValue) => {
           if (!props.rating) {
-            ref.current = newValue;
-            setValue(newValue);
+              ref[props.type] = newValue;
+              setValue(newValue);
           }
         }}
       />

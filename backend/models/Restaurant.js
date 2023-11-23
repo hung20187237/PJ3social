@@ -6,6 +6,10 @@ const RestaurantSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    places: {
+      type: String,
+      require: true,
+    }
   },
   { timestamps: true }
 );

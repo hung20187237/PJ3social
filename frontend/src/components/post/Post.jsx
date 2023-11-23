@@ -1,11 +1,10 @@
 import "./Post.css";
-import { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { FacebookProvider, Comments } from "react-facebook";
 import SendIcon from "@mui/icons-material/Send";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -15,6 +14,8 @@ import RoomIcon from "@mui/icons-material/Room";
 import ReactImageGrid from "@cordelia273/react-image-grid";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ReplyIcon from "@mui/icons-material/Reply";
+import {Rate} from "antd";
+import {TextItem, TextItemVote} from "../../pages/searchRestaurant/Component/Post/styles";
 
 export default function Post({ post, user1 }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -35,7 +36,6 @@ export default function Post({ post, user1 }) {
   const reply = useRef();
   const body = post.desc;
   const listUrl = post.img.map((img) => PF + img);
-  console.log(post);
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
@@ -217,6 +217,20 @@ export default function Post({ post, user1 }) {
     setMore(!more);
   };
 
+  const calculateAverage = obj => {
+    let sum = 0;
+    let count = 0;
+
+    for (let key in obj) {
+      console.log(obj[key])
+      sum += obj[key];
+      count++;
+    }
+    console.log('sum', sum)
+    return count === 0 ? 0 : sum / count;
+  };
+
+
   const MoreContainer = () => {
     return (
       <div className="moremain">
@@ -388,10 +402,10 @@ export default function Post({ post, user1 }) {
                   <RoomIcon htmlColor="green" className="reviewIcon" />
                   <span>{post.place}</span>
                 </div>
-                <BasicRating
-                  rating={post.rating}
-                  style={{ margin: "0 10px" }}
-                />
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                  <TextItem>{calculateAverage(post.rating)}</TextItem>
+                  <Rate allowHalf disabled  defaultValue={calculateAverage(post.rating)} style={{ fontSize: "32px" }}/>
+                </div>
               </div>
             </div>
             <div className="postTopRight">
