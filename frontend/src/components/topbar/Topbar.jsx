@@ -31,8 +31,6 @@ export default function Topbar(socket) {
 
   let navigate = useNavigate();
 
-  console.log(optionUser)
-
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [notifications]);
@@ -89,7 +87,6 @@ export default function Topbar(socket) {
     const username = listSearchUser.filter((user) => user.username);
     const titles = listSearchUser.filter((user) => user.title);
     const restaurants = listSearchUser.filter((res) => res.name);
-    console.log(username, titles);
     setOptionUser([
       {
         label: renderTitle("Người dùng"),
@@ -128,7 +125,6 @@ export default function Topbar(socket) {
           );
         })
       );
-    console.log(notifications);
   }, [deletedfriendRequestNotification]);
 
   const renderItem = (item, title, key) => ({

@@ -1,6 +1,6 @@
 import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Rightbar from "../../components/rightbar/Rightbar";
 import RoomIcon from "@mui/icons-material/Room";
 import SaveIcon from "../../images/icon/restaurent/save.svg";
@@ -21,14 +21,17 @@ import {
     ReactImageGridCustom,
     ReviewContainer, TextPostContainer, TitlePostContainer
 } from "./styles";
-import {Button, Col, InputNumber, Row, Slider} from "antd";
+import {Button, Col, InputNumber, Modal, Row, Slider} from "antd";
 import {FaCar, FaChild, FaCloudSun, FaHeart, FaMotorcycle, FaRegCreditCard, FaWifi} from "react-icons/fa";
 import { MdOutlinePets } from "react-icons/md";
 import { GiCakeSlice } from "react-icons/gi";
 import PostRes from "./Component/Post";
+import {Link} from "react-router-dom";
+import ModalReview from "./Component/ModalReview";
 
 export default function SearchPost(username) {
   const [restaurant, setRestaurant] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [post, setPost] = useState([]);
   const { resId } = useParams();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -59,10 +62,20 @@ export default function SearchPost(username) {
   const listImage = getAllImages(post);
   const listUrl =listImage.map((img) => PF + img);
 
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
     console.log('post', post)
 
     const IntegerStep = () => {
-        const [inputValue, setInputValue] = useState(1);
+        const [inputValue, setInputValue] = useState(4);
         const onChange = (newValue) => {
             setInputValue(newValue);
         };
@@ -235,7 +248,8 @@ export default function SearchPost(username) {
                             Đánh giá từ cộng đồng
                             <span>({post.length})</span>
                         </h2>
-                        <ButtonReview>Viết đánh giá</ButtonReview>
+                        <ButtonReview onClick={showModal}>Viết đánh giá</ButtonReview>
+                        <ModalReview visible={isModalOpen} onSubmit={handleOk} onCancel={handleCancel}/>
                     </TitlePostContainer>
                     <ContentPostContainer>
                         <BoxImageContent>
