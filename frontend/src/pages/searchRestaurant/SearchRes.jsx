@@ -11,7 +11,8 @@ import { useParams } from "react-router";
 
 export default function SearchPost(username) {
   const [restaurant, setRestaurant] = useState("");
-  const [post, setPost] = useState([]);
+  const [post, setPost] = useState();
+  const { user } = useContext(Context);
   const { resId } = useParams();
 
   useEffect(() => {
@@ -23,15 +24,23 @@ export default function SearchPost(username) {
     }
     fetchPosts();
   }, []);
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     const postRes = await axios.get(
+  //       "http://localhost:8800/api/restaurant/reviewposts/" + resId
+  //     );
+  //     setPost(postRes.data);
+  //   };
+  //   fetchPosts();
+  // }, []);
+
   useEffect(() => {
     const fetchPosts = async () => {
-      const postRes = await axios.get(
-        "http://localhost:8800/api/restaurant/reviewposts/" + resId
-      );
-      setPost(postRes.data);
+      const res = await axios.get("http://localhost:8800/api/post/" + '630737ca8559748a25ad23ba');
+      setPost(res.data);
     };
     fetchPosts();
-  }, []);
+  }, [restaurant]);
   console.log(restaurant);
   console.log(post);
   return (
@@ -52,6 +61,7 @@ export default function SearchPost(username) {
                 </div>
             </div>
           </div>
+          {post && <Post key={post._id} post={post} user1={user} />}
         </div>
         <Rightbar />
       </div>

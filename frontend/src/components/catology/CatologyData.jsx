@@ -68,4 +68,14 @@ export const CatologyData = [
     title: "Gà-vịt",
     value: "Gà-vịt",
   },
+  {
+    image: "https://diachiamthuc.vn/wp-content/uploads/2023/05/Vi-An-mang-den-cho-ban-nhung-bua-com-dam-da-va-tron-ven-nhu-trong-mot-gia-dinh.jpg",
+    title: "Món ăn Việt Nam",
+    value: "Món ăn Việt Nam",
+  },
+  {
+    image: "https://luhanhvietnam.com.vn/du-lich/vnt_upload/news/03_2023/quan-an-ngon-quan-hoang-mai-net-viet.jpg",
+    title: "Khác",
+    value: "Khác",
+  },
 ];

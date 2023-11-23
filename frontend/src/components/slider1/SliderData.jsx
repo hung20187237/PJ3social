@@ -28,5 +28,10 @@ export const SliderData = [
     image:'https://vcdn-giadinh.vnecdn.net/2022/03/19/tiet-kiem-8758-1647681799.jpg',
     title: 'Tiết kiệm',
     value : 'Tiết kiệm'
+  },
+  {
+    image:'https://luhanhvietnam.com.vn/du-lich/vnt_upload/news/03_2023/quan-an-ngon-quan-hoang-mai-net-viet.jpg',
+    title: 'Khác',
+    value : 'Khác'
   }
 ];

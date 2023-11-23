@@ -91,7 +91,7 @@ export default function SearchPage({ filter, data }) {
           />
           <MultiSelectFloat
             dataSelect={CatologyData}
-            label={"Danh mục"}
+            label={"Thể loại"}
             valueSelect={filterValue.dm}
             onChangeSelect={(value) => {
               setFilterValue({ ...filterValue, dm: value });
