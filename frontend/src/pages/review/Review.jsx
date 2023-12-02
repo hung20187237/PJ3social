@@ -44,10 +44,10 @@ export default function Review() {
   const submitHandler = async (e) => {
     e.preventDefault();
     const value = await form.validateFields();
-    const resultDesc = checkCommunityStandards(desc.current.getContent());
+    const resultDesc = desc.current.getContent();
     const newPost = {
       userId: user._id,
-      desc: '',
+      desc: desc.current.getContent(),
       title: value.name,
       rating: rating.current,
       place: value.place,
@@ -55,11 +55,11 @@ export default function Review() {
       tagtc: filterValue.tc,
       tagdm: filterValue.dm,
     };
-    if (resultDesc === 0) {
-      newPost.desc = desc.current.getContent();
-    }else {
-      alert(resultDesc)
-    }
+    // if (resultDesc === 0) {
+    //   newPost.desc = desc.current.getContent();
+    // }else {
+    //   alert(resultDesc)
+    // }
 
     if (mutifile) {
       const data = new FormData();
@@ -81,7 +81,7 @@ export default function Review() {
         name: newPost.title,
         place: newPost.place,
       });
-      window.location.reload();
+      // window.location.reload();
     } catch (err) {}
   };
 
@@ -148,7 +148,7 @@ export default function Review() {
     const listImg = Object.values(files);
     const listUrl = listImg.map((img) => URL.createObjectURL(img));
     console.log(listUrl);
-    handleImageUpload(listImg)
+    // handleImageUpload(listImg)
     setFiles(files);
     setMutifile(listImg);
     setMutiupload(listUrl);
@@ -217,41 +217,15 @@ export default function Review() {
               <h2>Đánh Giá của bạn :</h2>
               <div className="reviewcomment">
                 <Editor
+                    apiKey='2annu51m1l3p8h815234aps59gbyfkt1nzuckp6rrotynkpu'
                   onInit={(evt, editor) => (desc.current = editor)}
                   initialValue={"What's in your mind " + user.username + "?"}
                   init={{
                     height: 400,
                     width: "100%",
                     menubar: false,
-                    plugins: [
-                      "a11ychecker",
-                      "advlist",
-                      "advcode",
-                      "advtable",
-                      "autolink",
-                      "checklist",
-                      "export",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "powerpaste",
-                      "fullscreen",
-                      "formatpainter",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                      "help",
-                      "wordcount",
-                    ],
-                    toolbar:
-                      "undo redo | casechange blocks | bold italic backcolor forecolor | " +
-                      "alignleft aligncenter alignright alignjustify | " +
-                      "bullist numlist checklist outdent indent | removeformat | a11ycheck code table help",
+                    plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
                     content_style:
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                   }}
@@ -268,7 +242,7 @@ export default function Review() {
                 />
               </div>
             )}
-            <form className="reviewBottom" onSubmit={submitHandler}>
+            <form className="reviewBottom">
               <div className="reviewOptions">
                 <label htmlFor="file" className="reviewOption">
                   <PermMediaIcon htmlColor="tomato" className="reviewIcon" />
@@ -303,7 +277,7 @@ export default function Review() {
                 </div>
               </div>
               <button
-                // onClick={log}
+                onClick={() => submitHandler()}
                 className="reviewButton"
                 type="submit"
                 style={{ width: "150px" }}
