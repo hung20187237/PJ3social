@@ -77,24 +77,28 @@ export default function Review() {
     }
     try {
       await axios.post("http://localhost:8800/api/post", newPost);
+      await axios.post("http://localhost:8800/api/restaurant", {
+        name: newPost.title,
+        place: newPost.place,
+      });
       window.location.reload();
     } catch (err) {}
   };
 
   const handleImageUpload = async (imageFile) => {
     console.log(imageFile)
-    const data = new FormData();
-    data.append('image', imageFile[0]);
-    let choseImage = [];
-    const resultUpload = await axios({
-      method: "post",
-      url: "https://api.imgur.com/3/image",
-      headers: {
-        Authorization: `Client-ID 225600e2fe06d7b`,
-      },
-      data: data,
-    });
-    console.log(resultUpload);
+    // const data = new FormData();
+    // data.append('image', imageFile[0]);
+    // let choseImage = [];
+    // const resultUpload = await axios({
+    //   method: "post",
+    //   url: "https://api.imgur.com/3/image",
+    //   headers: {
+    //     Authorization: `Client-ID 225600e2fe06d7b`,
+    //   },
+    //   data: data,
+    // });
+    // console.log(resultUpload);
     // if (Array.isArray(imageFile)) {
     //   const uploadArray = imageFile.map(async (item) => {
     //     console.log(item);
@@ -113,17 +117,16 @@ export default function Review() {
     //   });
     //   choseImage = await Promise.all(uploadArray);
     // }
-    console.log(choseImage)
 
     const apiUrl = 'https://api.sightengine.com/1.0/check-workflow.json';
-    const apiKey = 'HFVyXMsK2mo3DqavoGECiGhNbq'; // Thay thế bằng khóa API của bạn
-    const apiUser = '1777157158'; // Thay thế bằng thông tin tài khoản của bạn
+    const apiKey = 'HFVyXMsK2mo3DqavoGECiGhNbq'; 
+    const apiUser = '1777157158'; 
     const workflowId = 'wfl_fcYaLLijOa94P50zolWlw';
 
     try {
       const response = await axios.get(apiUrl, {
         params: {
-          url: 'https://i.imgur.com/lm8vMnH.jpg',
+          url: 'https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2021/5/26/913299/Ngan-Ha25.jpg',
           workflow: workflowId,
           api_user: apiUser,
           api_secret: apiKey,
@@ -132,7 +135,7 @@ export default function Review() {
 
       // Xử lý kết quả từ Sightengine
       console.log(response.data.summary);
-      alert(response.data.summary.action);
+      alert(response.data.summary.action === 'accept' ? "hình ảnh hợp lệ" : "Hình ảnh vi phạm tiêu chuẩn cộng đồng");
     } catch (error) {
       // Xử lý lỗi
       if (error.response) console.log(error.response.data);

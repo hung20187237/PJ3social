@@ -26,7 +26,6 @@ import {FaCar, FaChild, FaCloudSun, FaHeart, FaMotorcycle, FaRegCreditCard, FaWi
 import { MdOutlinePets } from "react-icons/md";
 import { GiCakeSlice } from "react-icons/gi";
 import PostRes from "./Component/Post";
-import {Link} from "react-router-dom";
 import ModalReview from "./Component/ModalReview";
 
 export default function SearchPost(username) {
@@ -45,24 +44,18 @@ export default function SearchPost(username) {
     }
     fetchPosts();
   }, []);
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     const postRes = await axios.get(
-  //       "http://localhost:8800/api/restaurant/reviewposts/" + resId
-  //     );
-  //     setPost(postRes.data);
-  //   };
-  //   fetchPosts();
-  // }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await axios.get("http://localhost:8800/api/post/" + '630737ca8559748a25ad23ba');
-      setPost(res.data);
+      const postRes = await axios.get(
+        "http://localhost:8800/api/restaurant/reviewposts/" + resId
+      );
+      setPost(postRes.data);
     };
     fetchPosts();
+  }, []);
 
-  }, [restaurant]);
+
   console.log(restaurant);
   console.log(post);
 
@@ -284,7 +277,6 @@ export default function SearchPost(username) {
                     </ListPostContainer>
                 </PostContainer>
           </div>
-          {post && <Post key={post._id} post={post} user1={user} />}
         </div>
         <Rightbar />
       </div>
