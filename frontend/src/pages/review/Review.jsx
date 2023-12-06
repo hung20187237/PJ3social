@@ -5,10 +5,11 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import CancelIcon from "@mui/icons-material/Cancel";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../../context/Context";
-import {Form, Rate} from "antd";
+import {Form, Button} from "antd";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Topbar from "../../components/topbar/Topbar";
 import BasicRating from "../../components/star/star";
+import warningIcon from "../../images/icon/review/warning.svg";
 import { Editor } from "@tinymce/tinymce-react";
 import ReactImageGrid from "@cordelia273/react-image-grid";
 import SelectFloat from "../../components/FloatingLabel/SelectFloat";
@@ -16,11 +17,19 @@ import { SliderSlickData } from "../../components/slider2/SliderSlickData";
 import { SliderData } from "../../components/slider1/SliderData";
 import { CatologyData } from "../../components/catology/CatologyData";
 import Floating from "../../components/FloatingLabel/Input/index";
-import imgTest from "../../images/backgroundLogin.png";
 import { FormCustom } from "./styles";
-import {ItemVote, TextItemVote} from "../searchRestaurant/Component/Post/styles";
+import {
+  BoxContent, ButtonSubmit,
+  ContentWarning, DivFooter,
+  IconWarning,
+  ItemVote,
+  ModalCustom,
+  TextItemVote,
+  TitleWarning
+} from "../searchRestaurant/Component/Post/styles";
 import {mildKeywords, moderateKeywords, severeKeywords} from "./contant";
 import axios from 'axios';
+
 
 
 export default function Review() {
@@ -39,15 +48,16 @@ export default function Review() {
   const [mutifile, setMutifile] = useState("");
   const [mutiupload, setMutiupload] = useState(null);
   const [filterValue, setFilterValue] = useState({ kv: [], tc: [], dm: [] });
-  const [files, setFiles] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
     const value = await form.validateFields();
-    const resultDesc = desc.current.getContent();
+    const resultDesc = checkCommunityStandards(desc.current.getContent());
     const newPost = {
       userId: user._id,
-      desc: desc.current.getContent(),
+      desc: resultDesc === 0 ? desc.current.getContent() : '',
       title: value.name,
       rating: rating.current,
       place: value.place,
@@ -55,12 +65,9 @@ export default function Review() {
       tagtc: filterValue.tc,
       tagdm: filterValue.dm,
     };
-    // if (resultDesc === 0) {
-    //   newPost.desc = desc.current.getContent();
-    // }else {
-    //   alert(resultDesc)
-    // }
-
+    if (resultDesc !== 0) {
+      alert(resultDesc)
+    }
     if (mutifile) {
       const data = new FormData();
       let fileName = [];
@@ -75,105 +82,96 @@ export default function Review() {
         newPost.img = Object.values(fileName);
       } catch (err) {}
     }
+    const newRes = {
+      name: newPost.title,
+      places: newPost.place,
+    };
     try {
+      console.log(newRes)
       await axios.post("http://localhost:8800/api/post", newPost);
-      await axios.post("http://localhost:8800/api/restaurant", {
-        name: newPost.title,
-        place: newPost.place,
-      });
-      // window.location.reload();
+      await axios.post("http://localhost:8800/api/restaurant", newRes);
+      window.location.reload();
     } catch (err) {}
   };
 
-  const handleImageUpload = async (imageFile) => {
-    console.log(imageFile)
-    // const data = new FormData();
-    // data.append('image', imageFile[0]);
-    // let choseImage = [];
-    // const resultUpload = await axios({
-    //   method: "post",
-    //   url: "https://api.imgur.com/3/image",
-    //   headers: {
-    //     Authorization: `Client-ID 225600e2fe06d7b`,
-    //   },
-    //   data: data,
-    // });
-    // console.log(resultUpload);
-    // if (Array.isArray(imageFile)) {
-    //   const uploadArray = imageFile.map(async (item) => {
-    //     console.log(item);
-    //     const resultUpload = await axios({
-    //       method: "post",
-    //       url: "https://api.imgur.com/3/image",
-    //       headers: {
-    //         Authorization: `Client-ID 225600e2fe06d7b`,
-    //       },
-    //       data: item,
-    //     });
-    //     console.log(resultUpload); // bỏ hết then đi
-    //     if (resultUpload.status === 200) {
-    //       return resultUpload.data.data.link;
-    //     }
-    //   });
-    //   choseImage = await Promise.all(uploadArray);
-    // }
-
-    const apiUrl = 'https://api.sightengine.com/1.0/check-workflow.json';
-    const apiKey = 'HFVyXMsK2mo3DqavoGECiGhNbq'; 
-    const apiUser = '1777157158'; 
-    const workflowId = 'wfl_fcYaLLijOa94P50zolWlw';
-
-    try {
-      const response = await axios.get(apiUrl, {
-        params: {
-          url: 'https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2021/5/26/913299/Ngan-Ha25.jpg',
-          workflow: workflowId,
-          api_user: apiUser,
-          api_secret: apiKey,
-        },
-      });
-
-      // Xử lý kết quả từ Sightengine
-      console.log(response.data.summary);
-      alert(response.data.summary.action === 'accept' ? "hình ảnh hợp lệ" : "Hình ảnh vi phạm tiêu chuẩn cộng đồng");
-    } catch (error) {
-      // Xử lý lỗi
-      if (error.response) console.log(error.response.data);
-      else console.log(error.message);
-    }
+  const checkAllActionsAccept = (array) => {
+    return array.every(item => item.summary.action === 'accept');
   };
+
+  const handleImageUploadBack = async (imageFile) => {
+    if (imageFile) {
+      const formData = new FormData();
+      [...imageFile].map((file) => formData.append("media", file));
+      try {
+        const response = await axios.post("http://localhost:8800/api/check-image", formData)
+        console.log(response)
+        if(response.data.data) {
+          const allActionsAccept = checkAllActionsAccept(response.data.data);
+          setIsModalOpen(!allActionsAccept)
+        }else {
+          setIsModalOpen(response.data.summary.action === "reject")
+        }
+
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  }
+
+  const handleContentUpload = async (content) => {
+    if (content) {
+      try {
+        const response = await axios.post("http://localhost:8800/api/check-content", {content})
+        console.log(response)
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  }
+
+  console.log(handleContentUpload('Đây là Trà sữa Nướng'))
+
+
+  const handleClick = async (content) => {
+    if (content) {
+      try {
+        const response = await axios.post("http://localhost:8800/api/translate", {content})
+        console.log(response)
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  }
 
 
   const MutipleFileChange = (files) => {
     const listImg = Object.values(files);
     const listUrl = listImg.map((img) => URL.createObjectURL(img));
-    console.log(listUrl);
-    // handleImageUpload(listImg)
-    setFiles(files);
+    handleImageUploadBack(listImg)
     setMutifile(listImg);
     setMutiupload(listUrl);
   };
 
   function checkCommunityStandards(post) {
-    // Kiểm tra mức độ từ khóa lạm dụng trong nội dung bài viết
     function checkKeywordLevel(content, keywords) {
       return keywords.some(keyword => content.includes(keyword));
     }
 
     // Kiểm tra từ khóa lạm dụng
-    if (checkKeywordLevel(post.content, severeKeywords)) {
+    if (checkKeywordLevel(post, severeKeywords)) {
       return "Bài viết chứa từ khóa lạm dụng nghiêm trọng.";
-    } else if (checkKeywordLevel(post.content, moderateKeywords)) {
+    } else if (checkKeywordLevel(post, moderateKeywords)) {
       return "Bài viết chứa từ khóa lạm dụng mức độ vừa.";
-    } else if (checkKeywordLevel(post.content, mildKeywords)) {
+    } else if (checkKeywordLevel(post, mildKeywords)) {
       return "Bài viết chứa từ khóa lạm dụng nhẹ.";
     }
 
     return 0;
   }
 
-
-
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
 
 
@@ -212,6 +210,29 @@ export default function Review() {
                 </ItemVote>
               </div>
             </div>
+            <button onClick={() => handleClick('skajdhjkadka')}>check</button>
+            <ModalCustom
+                title={<TitleWarning>Vi Phạm Cộng Đồng</TitleWarning>}
+                visible={isModalOpen}
+                onCancel={handleCancel}
+                footer={
+                  <DivFooter>
+                    <ButtonSubmit
+                        onClick={() => {
+                          handleCancel();
+                        }}
+                    >
+                      Đóng
+                    </ButtonSubmit>
+                  </DivFooter>
+                }
+            >
+              <BoxContent>
+                <IconWarning src={warningIcon}/>
+                <TitleWarning>Hình ảnh của Bạn đã vi phạm tiêu chuẩn cộng đồng</TitleWarning>
+                <ContentWarning>Vui lòng kiểm tra lại các hình ảnh trước khi đăng tải mo thắc mắc vui lòng gửi vè cho quản trị viên</ContentWarning>
+              </BoxContent>
+            </ModalCustom>
 
             <div className="reviewTop">
               <h2>Đánh Giá của bạn :</h2>
@@ -242,7 +263,7 @@ export default function Review() {
                 />
               </div>
             )}
-            <form className="reviewBottom">
+            <form className="reviewBottom" onSubmit={submitHandler}>
               <div className="reviewOptions">
                 <label htmlFor="file" className="reviewOption">
                   <PermMediaIcon htmlColor="tomato" className="reviewIcon" />
@@ -255,7 +276,6 @@ export default function Review() {
                     multiple
                     accept=".png,.jpeg,.jpg"
                     onChange={(e) => {
-                      console.log(e.target.files);
                       MutipleFileChange(e.target.files);
                     }}
                   />
@@ -277,7 +297,7 @@ export default function Review() {
                 </div>
               </div>
               <button
-                onClick={() => submitHandler()}
+                // onClick={() => submitHandler()}
                 className="reviewButton"
                 type="submit"
                 style={{ width: "150px" }}

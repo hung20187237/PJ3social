@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import ReactImageGrid from "@cordelia273/react-image-grid";
+import {Button, Modal} from "antd";
 
 export const PostItemRight = styled.div`
   position: relative;
@@ -116,4 +117,70 @@ export const TextItem = styled.div`
   background: #e03;
   border-radius: 50%;
   margin-right: 10px;
+`;
+export const ModalCustom = styled(Modal)`
+  & .ant-modal-content {
+    width: 471px;
+    background: #FFF;
+    border-radius: 12px;
+    box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.20);
+  }
+  & .ant-modal-header {
+    border-radius: 12px 12px 0 0;
+  }
+`;
+
+export const IconWarning = styled.img`
+  width: 95px;
+  height: 95px;
+  flex-shrink: 0;
+`;
+
+export const TitleWarning = styled.div`
+  color: var(--red1, #ED3E26);
+  text-align: center;
+  font-family: Open Sans,serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+`;
+
+export const ContentWarning = styled.div`
+  color: var(--Main-text-color, #222D4B);
+  text-align: center;
+  font-family: Open Sans,serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+`;
+
+export const BoxContent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const DivFooter = styled.div`
+  display: flex;
+  width: 100%;
+  height: 40px;
+  font-style: normal;
+  font-weight: 400;
+  justify-content: center;
+  font-size: 1.07142em;
+  line-height: 20px;
+  align-items: center;
+`;
+
+export const ButtonSubmit = styled(Button)`
+  background-color: #ea6b5a;
+  color: #ffffff;
+  border-radius: 12px;
+  width: 132px;
+  height: 40px;
+  font-weight: 600;
 `;

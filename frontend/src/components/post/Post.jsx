@@ -222,11 +222,9 @@ export default function Post({ post, user1 }) {
     let count = 0;
 
     for (let key in obj) {
-      console.log(obj[key])
       sum += obj[key];
       count++;
     }
-    console.log('sum', sum)
     return count === 0 ? 0 : sum / count;
   };
 

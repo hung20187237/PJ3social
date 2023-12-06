@@ -1,14 +1,13 @@
 import "./Topbar.css";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
-import { UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { useContext, useRef, useState, useEffect } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import axios from "axios";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import CreateIcon from "@mui/icons-material/Create";
-import { AutoComplete, Input } from "antd";
+import {AutoComplete, Button, Input, Modal} from "antd";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import { format } from "timeago.js";
 

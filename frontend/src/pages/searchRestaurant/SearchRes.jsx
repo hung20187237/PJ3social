@@ -57,7 +57,6 @@ export default function SearchPost(username) {
 
 
   console.log(restaurant);
-  console.log(post);
 
   function getAllImages(objectsArray) {
     return objectsArray.flatMap(obj => obj.img);
@@ -76,20 +75,44 @@ export default function SearchPost(username) {
         setIsModalOpen(false);
     };
 
+    const calculateAverage = obj => {
+        let sum = 0;
+        let count = 0;
+
+        for (let key in obj) {
+            sum += obj[key];
+            count++;
+        }
+        return count === 0 ? 0 : sum / count;
+    };
+
+// Tính trung bình cho mỗi thuộc tính của rating
+    let averageRating = {};
+
+    post.forEach(item => {
+        let rating = item.rating;
+        for (let key in rating) {
+            if (averageRating[key] === undefined) {
+                averageRating[key] = rating[key];
+            } else {
+                averageRating[key] = (averageRating[key] + rating[key]) / 2;
+            }
+        }
+    });
+
+// In ra object chứa các thuộc tính rating của phần tử được tính trung bình
+
+
     console.log('post', post)
 
-    const IntegerStep = () => {
-        const [inputValue, setInputValue] = useState(4);
-        const onChange = (newValue) => {
-            setInputValue(newValue);
-        };
+    const IntegerStep = ({core}) => {
+        const [inputValue, setInputValue] = useState(core);
         return (
             <Row style={{flex: 1}}>
                 <Col span={18}>
                     <Slider
                         min={1.0}
                         max={5.0}
-                        onChange={onChange}
                         value={typeof inputValue === 'number' ? inputValue : 0}
                     />
                 </Col>
@@ -102,7 +125,6 @@ export default function SearchPost(username) {
                         }}
                         bordered={false}
                         value={inputValue}
-                        onChange={onChange}
                     />
                 </Col>
             </Row>
@@ -142,7 +164,7 @@ export default function SearchPost(username) {
                     <BoxContainer>
                         <h2>Đánh giá</h2>
                         <BoxScore>
-                            <p>5.0</p>
+                            <p>{calculateAverage(averageRating)}</p>
                             <div>
                                 <h2>Tuyệt vời</h2>
                                 <span>/5 (1 đánh giá)</span>
@@ -151,23 +173,23 @@ export default function SearchPost(username) {
                         <FlexColum>
                             <ItemInteger>
                                 <LabelInteger>Vị trí</LabelInteger>
-                                <IntegerStep/>
+                                <IntegerStep core={averageRating.place}/>
                             </ItemInteger>
                             <ItemInteger>
                                 <LabelInteger>Không gian</LabelInteger>
-                                <IntegerStep/>
+                                <IntegerStep core={averageRating.space}/>
                             </ItemInteger>
                             <ItemInteger>
                                 <LabelInteger>Đồ ăn</LabelInteger>
-                                <IntegerStep/>
+                                <IntegerStep core={averageRating.food}/>
                             </ItemInteger>
                             <ItemInteger>
                                 <LabelInteger>Phục vụ</LabelInteger>
-                                <IntegerStep/>
+                                <IntegerStep core={averageRating.serve}/>
                             </ItemInteger>
                             <ItemInteger>
                                 <LabelInteger>Giá cả</LabelInteger>
-                                <IntegerStep/>
+                                <IntegerStep core={averageRating.price}/>
                             </ItemInteger>
                         </FlexColum>
                     </BoxContainer>

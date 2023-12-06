@@ -32,6 +32,19 @@ const PostRes = ({post}) => {
         fetchUser();
     }, []);
 
+    const calculateAverage = obj => {
+        let sum = 0;
+        let count = 0;
+
+        for (let key in obj) {
+            sum += obj[key];
+            count++;
+        }
+        return count === 0 ? 0 : sum / count;
+    };
+
+
+
     const content = (
         <div>
             <ItemVote>
@@ -82,7 +95,7 @@ const PostRes = ({post}) => {
                         <PostUserVote>
                             <Popover content={content} title="Đánh giá" placement="topRight" arrow={true}>
                                 <span>
-                                    <b>{post.rating}</b>
+                                    <b>{calculateAverage(post.rating)}</b>
                                 </span>
                             </Popover>
                         </PostUserVote>
