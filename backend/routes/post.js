@@ -13,6 +13,57 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get('/api/suggest-posts/:userId', async (req, res) => {
+
+  async function getUserHistory(userId) {
+    const user = await User.findById(userId);
+    return await Promise.all(
+        user.savedposts.map((item) => {
+          return Post.findById(item);
+        })
+    );
+  }
+
+  async function getIdPostHistory(userId) {
+    const user = await User.findById(req.params.id);
+    return user.savedposts;
+  }
+
+  async function getFilterPosts(userHistory) {
+    return Post .find({_id: {$nin: userHistory}});
+  }
+
+  async function getSimilarPosts(savedPosts, allPosts) {
+    // Extract unique tags from saved posts
+    const uniqueTags = [...new Set(savedPosts.map(post => post.tagkv))];
+
+    // Filter posts with tags similar to saved posts' tags
+    const similarPosts = allPosts.filter(post => uniqueTags.includes(post.tagkv));
+
+    // Return the first 10 posts (or fewer if there are less than 10)
+    const shuffledPosts = similarPosts.sort(() => Math.random() - 0.5);
+
+    return shuffledPosts.slice(0, 10);
+  }
+
+
+  try {
+    const userHistory = await getIdPostHistory(req.params.id);
+    const PostsFilter = await getFilterPosts(userHistory);
+    // Lấy lịch sử truy cập bài viết của người dùng từ database
+    const userPostHistory = await getUserHistory(req.params.id);
+
+    // Tìm các bài viết gợi ý dựa trên lịch sử truy cập
+    const suggestedPosts = await getSimilarPosts(userPostHistory, PostsFilter);
+
+    res.json(suggestedPosts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Đã xảy ra lỗi' });
+  }
+});
+
+
 //update a post
 router.put("/:id", async (req, res) => {
   try {

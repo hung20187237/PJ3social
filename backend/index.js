@@ -103,7 +103,7 @@ app.post('/api/check-content', async (req, res) => {
 
   try {
     const data = new FormData();
-    data.append('text', 'Đây là Trà sữa Nướng ak47 hunter slayder killer sex someone súng Vân Nam hot bên Trung Quốc lắm nha. Quán này là ở số 32 Hàng Muối - chỉ bán tối từ 18h-23h nhé.');
+    data.append('text', req.body.content);
     data.append('lang', 'en');
     data.append('mode', 'ml,rules');
     data.append('categories', 'drug, weapon, extremism');
