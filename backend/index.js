@@ -127,39 +127,6 @@ app.post('/api/check-content', async (req, res) => {
 
 
 
-app.post('/api/translate', async (req, res) => {
-
-  console.log('req.body', req.body)
-  const apiKey = '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';
-  const prompt = 'What is the meaning of life?';
-  const apiUrl = 'https://api.openai.com/v1/engines/gpt-3.5-turbo/completions';
-  const requestData = {
-    prompt,
-    max_tokens: 150,
-    temperature: 0.7,
-  };
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apiKey}`,
-  };
-
-  try {
-    axios.post(apiUrl, requestData, { headers })
-        .then(response => {
-          const answer = response.data.choices[0].text.trim();
-          console.log('Answer:', answer);
-        })
-        .catch(error => {
-          console.error('Error:', error.response ? error.response.data : error.message);
-        });
-  } catch (error) {
-    if (error.response) res.status(error.response.status).json(error.response.data);
-    else res.status(500).json({ error: error.message });
-  }
-});
-
-
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);

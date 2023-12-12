@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get('/api/suggest-posts/:userId', async (req, res) => {
+router.get('/suggest-posts/:id', async (req, res) => {
 
   async function getUserHistory(userId) {
     const user = await User.findById(userId);
@@ -25,7 +25,7 @@ router.get('/api/suggest-posts/:userId', async (req, res) => {
   }
 
   async function getIdPostHistory(userId) {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(userId);
     return user.savedposts;
   }
 
@@ -43,7 +43,7 @@ router.get('/api/suggest-posts/:userId', async (req, res) => {
     // Return the first 10 posts (or fewer if there are less than 10)
     const shuffledPosts = similarPosts.sort(() => Math.random() - 0.5);
 
-    return shuffledPosts.slice(0, 10);
+    return shuffledPosts.slice(0, 8);
   }
 
 
