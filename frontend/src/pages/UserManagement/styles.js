@@ -1,23 +1,65 @@
 import styled from 'styled-components';
-import { TableEtn } from '../../../../res/components/Table/style';
+import {Input} from "antd";
 
-const Icon = styled.img`
-  margin-top: 3px;
-  width: 14px;
-  height: 14px;
+export const SearchBar = styled.div`
+  display: flex;
+  width: 800px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 16px;
 `;
 
-const LineDiv = styled.div`
-  display: inline-flex;
-  flex-direction: row;
-  padding: 5px;
+export const ContainerHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 24px;
+  padding-right: 24px;
+  width: 100%;
+  height: 100%;
+  
 `;
 
-const Content = styled.div`
-  margin-left: 10px;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 19px;
+
+export const SearchContainer = styled.div`
+  height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+`;
+export const BoxSearch = styled.div`
+  height: 40px;
+  width: 100%;
+  padding: 16px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid #C5CED9;
 `;
 
-export { Icon, LineDiv, Content };
+export const BoxFilter = styled.div`
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  background: var(--Main-color, #089DDD);
+`;
+export const InputCustom = styled(Input)`
+
+`;
+
+
+export const BoxIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+`;
+
+

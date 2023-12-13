@@ -3,10 +3,6 @@ export const Login = (user) => ({
     payload: user,
 });
 
-// export const SavePost = (postId) => ({
-//     type: "SAVEPOST",
-//     payload: postId,
-// });
 
 export const Follow = (userId) => ({
     type: "FOLLOW",

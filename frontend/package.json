@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@chakra-ui/react": "^2.2.8",
     "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@chatscope/chat-ui-kit-styles": "^1.4.0",
@@ -16,13 +17,14 @@
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
     "@tinymce/tinymce-react": "^4.3.2",
-    "antd": "4.21.7",
+    "antd": "5.12.0",
     "axios": "^0.27.2",
     "form-data": "^4.0.0",
     "framer-motion": "^7.1.1",
     "i18next": "^23.0.2",
     "moment": "^2.29.3",
     "openai": "^4.20.1",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-custom-scroll": "^4.4.0",
     "react-dom": "^18.1.0",
@@ -44,6 +46,7 @@
     "swiper": "^11.0.4",
     "timeago.js": "^4.0.2",
     "tinymce": "^6.0.3",
+    "utils": "^0.3.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -16,14 +16,6 @@ const Reducer = (state, action) => {
             saveposts: [...state.user.saveposts, action.payload],
           },
         };
-    // case "SAVEPOST":
-    //     return {
-    //       ...state,
-    //       user: {
-    //         ...state.user,
-    //         savings: [...state.user.saveposts, action.payload],
-    //       },
-    //     };
     case "UNFOLLOW":
         return {
           ...state,

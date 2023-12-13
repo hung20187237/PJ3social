@@ -15,6 +15,7 @@ import Newfeed from "./pages/newfeed/Newfeed";
 import SearchPage from "./pages/searchpage/SearchPage";
 import SearchPost from "./pages/searchpost/SearchPost";
 import SearchRes from "./pages/searchRestaurant/SearchRes";
+import UserManagement from "./pages/UserManagement/index";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path="/searchpage/:value/:id" element={<SearchPage />} />
         <Route path="/searchPost/:postid" element={<SearchPost />} />
         <Route path="/searchRestaurant/:resId" element={<SearchRes />} />
+        <Route path="/adminManagement" element={<UserManagement />} />
       </Routes>
     </Router>
   );

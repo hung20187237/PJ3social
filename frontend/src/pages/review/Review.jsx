@@ -217,7 +217,6 @@ export default function Review() {
                   </ItemVote>
                 </div>
               </div>
-              <button onClick={() => handleContentUpload('Hình ảnh của Bạn đã vi phạm tiêu chuẩn cộng đồng')}>check</button>
               <ModalCustom
                   title={<TitleWarning>Vi Phạm Cộng Đồng</TitleWarning>}
                   visible={isModalOpen}
