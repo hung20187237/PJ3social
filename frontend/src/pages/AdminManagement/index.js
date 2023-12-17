@@ -1,128 +1,90 @@
-import React, {useContext} from 'react';
-import {
-    TeamOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
+import React, {useContext, useEffect, useState} from 'react';
 import {Layout, Menu, Space, Table, Tag, theme} from 'antd';
 import searchIcon from "../../images/icon/adminManagement/search.svg";
 import filterIcon from "../../images/icon/adminManagement/Filter.svg";
 import {BoxFilter, BoxIcon, BoxSearch, ContainerHeader, InputCustom, SearchBar, SearchContainer} from "./styles";
 import {Link} from "react-router-dom";
 import {Context} from "../../context/Context";
+import axios from "axios";
+import {columns, columnsComment, columnsPost} from "./contants";
 const { Header, Content, Footer, Sider } = Layout;
 
-function getItem(label, key, icon, children) {
-    return {
-        key,
-        icon,
-        children,
-        label,
-    };
-}
-const items = [
-    getItem('Quản lý User', '1', <UserOutlined />),
-    getItem('Quản lý Report', '2', <TeamOutlined />),
-];
 export default function AdminManagement () {
     const { user, dispatch } = useContext(Context);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const [listUsers, setListUsers] = useState([]);
+    const [listPosts, setListPosts] = useState([]);
+    const [selectMenu, setSelectMenu] = useState('1');
 
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-        },
-        {
-            title: 'Tags',
-            key: 'tags',
-            dataIndex: 'tags',
-            render: (_, { tags }) => (
-                <>
-                    {tags.map((tag) => {
-                        let color = tag.length > 5 ? 'geekblue' : 'green';
-                        if (tag === 'loser') {
-                            color = 'volcano';
-                        }
-                        return (
-                            <Tag color={color} key={tag}>
-                                {tag.toUpperCase()}
-                            </Tag>
-                        );
-                    })}
-                </>
-            ),
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <a>Invite {record.name}</a>
-                    <a>Delete</a>
-                </Space>
-            ),
-        },
-    ];
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sydney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-        },
-    ];
+
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const res = await axios.get("http://localhost:8800/api/user/all/all/all/");
+            setListUsers( res.data);
+        };
+        fetchUsers();
+    },[]);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const res = await axios.get("http://localhost:8800/api/post/allPosts/" + user._id);
+            setListPosts( res.data);
+        };
+        fetchPosts();
+    },[]);
+
+    console.log(listPosts)
+
 
 
     return (
         <Layout hasSider>
             <Sider
                 style={{
+                    background: '#050F33',
                     overflow: 'auto',
-                    height: '100vh',
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
+                    padding: '24px',
                 }}
+                width={256}
             >
-                <div className="demo-logo-vertical" />
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
+                <div
+                    style={{
+                        width: 130,
+                        height: 130,
+                        margin: 'auto',
+                        marginBottom: 32
+                    }}
+                >
+                    <img
+                        src={user.avatar ? PF + user.avatar : PF + "person/noAvatar.png"}
+                        alt=""
+                        style={{
+                            width: 130,
+                            height: 130,
+                        }}
+                    />
+                </div>
+                <Menu
+                    theme="dark"
+                    selectedKeys={selectMenu}
+                    onSelect={(e) => setSelectMenu(e.key)}
+                    style={{
+                        background: '#050F33',
+                        color: 'white',
+                        height: 'calc(100vh - (55px + 130px + 16px + 32px)'
+                    }}
+                >
+                    <Menu.Item key="1">Quản lý User</Menu.Item>
+                    <Menu.Item key="2">Quản lý Posts</Menu.Item>
+                    <Menu.Item key="3">Quản lý Comment</Menu.Item>
+                    <Menu.Item key="4">Quản lý Report</Menu.Item>
+                </Menu>
             </Sider>
-            <Layout
-                style={{
-                    marginLeft: 200,
-                }}
-            >
+            <Layout>
                 <Header
                     style={{
                         padding: 0,
@@ -158,10 +120,14 @@ export default function AdminManagement () {
                     style={{
                         margin: '24px 16px 0',
                         overflow: 'initial',
+                        marginLeft: 50,
+                        marginRight: 50,
                     }}
                 >
                     <div>
-                        <Table columns={columns} dataSource={data} />
+                        {selectMenu === '1' && <Table columns={columns} dataSource={listUsers} />}
+                        {selectMenu === '2' && <Table columns={columnsPost} dataSource={listPosts} />}
+                        {selectMenu === '3' && <Table columns={columnsComment} dataSource={[]} />}
                     </div>
                 </Content>
                 <Footer

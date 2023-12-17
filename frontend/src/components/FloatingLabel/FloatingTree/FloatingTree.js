@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Empty } from 'antd';
 import { t } from 'i18next';
 import { FlWrapper, Label, RedStar } from '../FloatingDatePicker/style';
-import { CustomTreeSelect } from '../../../../containers/System/components/UserManagement/component/AddUser/styles';
+import { CustomTreeSelect } from '../../../../containers/System/components/AdminManagement/component/AddUser/styles';
 import Floating from '../Floatting';
 const FloatingTree = props => {
   const {
