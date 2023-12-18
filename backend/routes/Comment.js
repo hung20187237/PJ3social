@@ -46,6 +46,19 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+
+//get all comments
+router.get("/all", async (req, res) => {
+  console.log('Comment', Comment)
+  try {
+    const comments = await Comment.find();
+    console.log('comments', comments)
+    res.status(200).json(comments);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //get comments on post
 router.get("/:postId", async (req, res) => {
   try {

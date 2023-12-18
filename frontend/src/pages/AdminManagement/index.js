@@ -17,6 +17,7 @@ export default function AdminManagement () {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const [listUsers, setListUsers] = useState([]);
     const [listPosts, setListPosts] = useState([]);
+    const [listComments, setListComments] = useState([]);
     const [selectMenu, setSelectMenu] = useState('1');
 
 
@@ -34,10 +35,17 @@ export default function AdminManagement () {
             const res = await axios.get("http://localhost:8800/api/post/allPosts/" + user._id);
             setListPosts( res.data);
         };
+
+        const fetchComments = async () => {
+            const res = await axios.get("http://localhost:8800/api/comment/all/");
+            setListComments( res.data);
+        };
+        fetchComments();
         fetchPosts();
     },[]);
 
-    console.log(listPosts)
+
+    console.log(listComments)
 
 
 
@@ -127,7 +135,8 @@ export default function AdminManagement () {
                     <div>
                         {selectMenu === '1' && <Table columns={columns} dataSource={listUsers} />}
                         {selectMenu === '2' && <Table columns={columnsPost} dataSource={listPosts} />}
-                        {selectMenu === '3' && <Table columns={columnsComment} dataSource={[]} />}
+                        {selectMenu === '3' && <Table columns={columnsComment} dataSource={listComments} />}
+                        {selectMenu === '4' && <Table columns={columnsComment} dataSource={listComments} />}
                     </div>
                 </Content>
                 <Footer
