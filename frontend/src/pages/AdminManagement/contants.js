@@ -19,6 +19,13 @@ export const LIST_STATUS_TYPE = [
 
 export const columns = [
   {
+    title: 'STT',
+    dataIndex: 'stt',
+    key: 'stt',
+    width: '4%',
+    render: (text, record, index) => <div>{index + 1}</div>
+  },
+  {
     title: 'Name',
     dataIndex: 'username',
     key: 'username',
@@ -74,7 +81,7 @@ export const columnsPost = [
     dataIndex: 'stt',
     key: 'stt',
     width: '4%',
-    render: (text, record, index) => <div>{index}</div>
+    render: (text, record, index) => <div>{index + 1}</div>
   },
   {
     title: 'UserId',
@@ -91,6 +98,7 @@ export const columnsPost = [
     title: 'Address',
     dataIndex: 'place',
     key: 'place',
+    width: '250px',
   },
   {
     title: 'Ngày tạo',
@@ -108,15 +116,16 @@ export const columnsPost = [
     title: 'Tags',
     key: 'tagkv',
     dataIndex: 'tagkv',
+    width: '350px',
     render: (text, record) =>
         <>
-          <Tag color={"1677FF"} key={text}>
+          <Tag color={"#1677FF"} key={text}>
             {text}
           </Tag>
-          <Tag color={"1677FF"} key={record.tagtc}>
+          <Tag color={"#1677FF"} key={record.tagtc}>
             {record.tagtc}
           </Tag>
-          <Tag color={"1677FF"} key={record.tagdm}>
+          <Tag color={"#1677FF"} key={record.tagdm}>
             {record.tagdm}
           </Tag>
         </>
@@ -124,6 +133,7 @@ export const columnsPost = [
   {
     title: 'Action',
     key: 'action',
+    width: '120px',
     render: (_, record) => (
         <Space size="middle">
           <a>Edit</a>
@@ -139,7 +149,7 @@ export const columnsComment = [
     dataIndex: 'stt',
     key: 'stt',
     width: '4%',
-    render: (text, record, index) => <div>{index}</div>
+    render: (text, record, index) => <div>{index + 1}</div>
   },
   {
     title: 'UserId',
@@ -170,6 +180,55 @@ export const columnsComment = [
     render: (_, record) => (
         <Space size="middle">
           <a>Edit</a>
+          <a>Delete</a>
+        </Space>
+    ),
+  },
+];
+
+export const columnsReport = [
+  {
+    title: 'STT',
+    dataIndex: 'stt',
+    key: 'stt',
+    width: '4%',
+    render: (text, record, index) => <div>{index + 1}</div>
+  },
+  {
+    title: 'UserId',
+    dataIndex: 'userId',
+    key: 'userId',
+    render: (text) => <div>{text}</div>,
+  },
+  {
+    title: 'PostReportId',
+    dataIndex: 'postReportId',
+    key: 'postReportId',
+    render: (text) => <div>{text}</div>,
+  },
+  {
+    title: 'CommentReportId',
+    dataIndex: 'commentReportId',
+    key: 'commentReportId',
+    render: (text) => <div>{text}</div>,
+  },
+  {
+    title: 'Desc',
+    dataIndex: 'desc',
+    key: 'desc',
+  },
+  {
+    title: 'Ngày tạo',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    render: (text) => <div>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</div>,
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: (_, record) => (
+        <Space size="middle">
+          <a>Handle</a>
           <a>Delete</a>
         </Space>
     ),

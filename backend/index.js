@@ -16,6 +16,7 @@ const conversationRoute = require('./routes/conversation')
 const friendRequestRoute = require('./routes/friendRequest')
 const notificationRoute = require("./routes/notification");
 const restaurantRoute = require("./routes/restaurant");
+const reportRoute = require("./routes/report");
 const path = require("path");
 const axios = require('axios');
 const FormData = require('form-data');
@@ -137,6 +138,7 @@ app.use("/api/conversation",conversationRoute);
 app.use("/api/friendRequest",friendRequestRoute);
 app.use("/api/notification", notificationRoute);
 app.use("/api/restaurant", restaurantRoute);
+app.use("/api/report", reportRoute);
 
 
 app.listen(8800, () => {

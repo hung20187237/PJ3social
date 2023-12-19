@@ -6,7 +6,7 @@ import {BoxFilter, BoxIcon, BoxSearch, ContainerHeader, InputCustom, SearchBar, 
 import {Link} from "react-router-dom";
 import {Context} from "../../context/Context";
 import axios from "axios";
-import {columns, columnsComment, columnsPost} from "./contants";
+import {columns, columnsComment, columnsPost, columnsReport} from "./contants";
 const { Header, Content, Footer, Sider } = Layout;
 
 export default function AdminManagement () {
@@ -18,6 +18,7 @@ export default function AdminManagement () {
     const [listUsers, setListUsers] = useState([]);
     const [listPosts, setListPosts] = useState([]);
     const [listComments, setListComments] = useState([]);
+    const [listReports, setListReports] = useState([]);
     const [selectMenu, setSelectMenu] = useState('1');
 
 
@@ -35,17 +36,21 @@ export default function AdminManagement () {
             const res = await axios.get("http://localhost:8800/api/post/allPosts/" + user._id);
             setListPosts( res.data);
         };
-
         const fetchComments = async () => {
             const res = await axios.get("http://localhost:8800/api/comment/all/");
             setListComments( res.data);
         };
+        const fetchReports = async () => {
+            const res = await axios.get("http://localhost:8800/api/report/all/");
+            setListReports( res.data);
+        };
         fetchComments();
         fetchPosts();
+        fetchReports();
     },[]);
 
 
-    console.log(listComments)
+    console.log(listReports)
 
 
 
@@ -136,7 +141,7 @@ export default function AdminManagement () {
                         {selectMenu === '1' && <Table columns={columns} dataSource={listUsers} />}
                         {selectMenu === '2' && <Table columns={columnsPost} dataSource={listPosts} />}
                         {selectMenu === '3' && <Table columns={columnsComment} dataSource={listComments} />}
-                        {selectMenu === '4' && <Table columns={columnsComment} dataSource={listComments} />}
+                        {selectMenu === '4' && <Table columns={columnsReport} dataSource={listReports} />}
                     </div>
                 </Content>
                 <Footer

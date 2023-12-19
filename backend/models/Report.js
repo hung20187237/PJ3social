@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const CommentSchema = new mongoose.Schema(
+const ReportSchema = new mongoose.Schema(
     {
         userId:{
             type: String,
@@ -12,11 +12,14 @@ const CommentSchema = new mongoose.Schema(
         commentReportId:{
             type: String,
         },
-        desc: {
+        ReportProblemId:{
             type: String,
             required: true
+        },
+        desc: {
+            type: String,
         },
     },
     {timestamps: true})
 
-module.exports = mongoose.model('Comment',CommentSchema)
+module.exports = mongoose.model('Report',ReportSchema)

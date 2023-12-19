@@ -9,13 +9,20 @@ import SendIcon from "@mui/icons-material/Send";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import BasicStar from "../starone/star";
-import BasicRating from "../../components/star/star";
 import RoomIcon from "@mui/icons-material/Room";
 import ReactImageGrid from "@cordelia273/react-image-grid";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ReplyIcon from "@mui/icons-material/Reply";
-import {Rate} from "antd";
-import {TextItem, TextItemVote} from "../../pages/searchRestaurant/Component/Post/styles";
+import {Dropdown, Radio, Rate, Space, Menu} from "antd";
+import {
+  ButtonSubmit,
+  DivFooter, ModalCustom,
+  TextItem,
+  TitleWarning
+} from "../../pages/searchRestaurant/Component/Post/styles";
+import {ItemMore, ReportContainer, TextAreaCustom} from "./styled";
+import {FileExclamationOutlined} from "@ant-design/icons";
+import ReportModal from "./Component/ReportModal";
 
 export default function Post({ post, user1 }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -30,7 +37,9 @@ export default function Post({ post, user1 }) {
   const [isSaved, setIsSaved] = useState(false);
   const [commentComponent, setCommentComponent] = useState(false);
   const [user, setUser] = useState({});
-  const [more, setMore] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [showReportComment, setShowReportComment] = useState(false);
+  const [commentId, setCommentId] = useState('');
   const { user: currentUser, notifyFlag, dispatch } = useContext(Context);
   const comment = useRef();
   const reply = useRef();
@@ -213,10 +222,6 @@ export default function Post({ post, user1 }) {
     }
   };
 
-  const handleClickMore = () => {
-    setMore(!more);
-  };
-
   const calculateAverage = obj => {
     let sum = 0;
     let count = 0;
@@ -228,22 +233,63 @@ export default function Post({ post, user1 }) {
     return count === 0 ? 0 : sum / count;
   };
 
+  const items = [
+    {
+      key: '1',
+      label: (
+          <ItemMore>
+            {isSaved ? (
+                <div onClick={handleClickSave}>
+                  <BasicStar value={1} />
+                </div>
+            ) : (
+                <div onClick={handleClickSave}>
+                  <BasicStar value={0} />
+                </div>
+            )}
+            <span>Lưu bài viết</span>
+          </ItemMore>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+          <ItemMore onClick={() => setShowReport(true)}>
+            <div style={{paddingRight: '10px'}} >
+              <FileExclamationOutlined />
+            </div>
+            <span>Report bài viết</span>
+          </ItemMore>
+      ),
+    },
+  ];
 
-  const MoreContainer = () => {
-    return (
-      <div className="moremain">
-        {isSaved ? (
-          <div onClick={handleClickSave}>
-            <BasicStar value={1} />
-          </div>
-        ) : (
-          <div onClick={handleClickSave}>
-            <BasicStar value={0} />
-          </div>
-        )}
-        <span>Lưu bài viết</span>
-      </div>
-    );
+  const menu1 = (item) => (
+      <Menu>
+        <Menu.Item key="1">
+          <ItemMore
+              onClick={() => {
+                setShowReportComment(true);
+                setCommentId(item._id);
+              }}
+          >
+            <div style={{paddingRight: '10px'}} >
+              <FileExclamationOutlined />
+            </div>
+            <span>Report Comment</span>
+          </ItemMore>
+        </Menu.Item>
+      </Menu>
+  );
+
+  //xu ly khi Report
+  const handleReportPost = async (dataReport) => {
+    try {
+      const res = await axios.post(
+          "http://localhost:8800/api/report/", dataReport
+      );
+      console.log('res', res)
+    } catch (err) {}
   };
 
   const PostCommentComponent = () => {
@@ -301,6 +347,9 @@ export default function Post({ post, user1 }) {
                       }}
                     />
                   ) : null}
+                  <Dropdown overlay={menu1(comment)} placement="bottomRight" arrow>
+                    <MoreVertIcon />
+                  </Dropdown>
                 </div>
                 <div className="postCommentsWrapper">
                   {comment.reply.map((rep) => {
@@ -415,10 +464,9 @@ export default function Post({ post, user1 }) {
                   />
                 ) : null}
               </div>
-              <div className="moreIcon" onClick={handleClickMore}>
+              <Dropdown menu={{ items }} placement="bottomRight" arrow>
                 <MoreVertIcon />
-                {more ? <MoreContainer /> : null}
-              </div>
+              </Dropdown>
             </div>
           </div>
           <div className="postCenter">
@@ -464,6 +512,22 @@ export default function Post({ post, user1 }) {
           {commentComponent ? <PostCommentComponent /> : null}
         </div>
       ) : null}
+      <ReportModal
+          title={<TitleWarning>Report Bài Viết</TitleWarning>}
+          visible={showReport}
+          onCancel={() => setShowReport(false)}
+          onsubmit={handleReportPost}
+          userId={user._id}
+          postId={post._id}
+      />
+      <ReportModal
+          title={<TitleWarning>Report Comment</TitleWarning>}
+          visible={showReportComment}
+          onCancel={() => setShowReportComment(false)}
+          onsubmit={handleReportPost}
+          userId={user._id}
+          commentId={commentId}
+      />
     </div>
   );
 }
