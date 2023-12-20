@@ -14,6 +14,28 @@ router.post("/", async (req, res) => {
     }
 });
 
+//delete a report with Admin role
+router.delete("/:id", async (req, res) => {
+    try {
+        const report = await Report.findById(req.params.id);
+        await report.deleteOne();
+        res.status(200).json("the report has been deleted");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+
+//delete a report with PostId
+router.delete("/byPostId/:id", async (req, res) => {
+    try {
+        await Report.deleteMany({postReportId: req.params.id});
+        res.status(200).json("the report has been deleted");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 //get all post
 router.get("/all", async (req, res) => {
     try {

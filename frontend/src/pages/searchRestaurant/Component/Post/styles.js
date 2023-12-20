@@ -120,7 +120,7 @@ export const TextItem = styled.div`
 `;
 export const ModalCustom = styled(Modal)`
   & .ant-modal-content {
-    width: 471px;
+    width: ${props => props.width || '471px'};
     background: #FFF;
     border-radius: 12px;
     box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.20);
