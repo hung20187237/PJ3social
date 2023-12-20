@@ -212,6 +212,9 @@ export default function Topbar(socket) {
     dispatch({ type: "LOG_OUT" });
     navigate("/");
   };
+    const handleClickAdmin = (e) => {
+        navigate("/adminManagement");
+    };
 
   const handleClickSearch = async (value, option) => {
     console.log("keysearch", value, option);
@@ -392,6 +395,11 @@ export default function Topbar(socket) {
             className="topbarImg"
           />
         </Link>
+        {user.role === 'admin' &&
+            <span className="topbarRightLogout" onClick={handleClickAdmin}>
+                Admin
+            </span>
+        }
         <span className="topbarRightLogout" onClick={handleClickLogout}>
           Log out
         </span>
