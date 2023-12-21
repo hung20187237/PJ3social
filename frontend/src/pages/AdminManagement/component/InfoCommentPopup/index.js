@@ -138,8 +138,8 @@ const InfoCommentModal = ({title, visible, onCancel, onsubmit, commentId}) => {
                                     handleCommentDelete().then(r => {
                                         setShowAlert(false);
                                         success();
-                                        onsubmit()
-                                        handleReportDelete().then(r => onCancel())
+                                        onsubmit();
+                                        onCancel();
                                     });
                                 }}
                             >

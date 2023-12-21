@@ -6,7 +6,6 @@ import {BoxFilter, BoxIcon, BoxSearch, ContainerHeader, InputCustom, SearchBar, 
 import {Link} from "react-router-dom";
 import {Context} from "../../context/Context";
 import axios from "axios";
-import {columns} from "./contants";
 import moment from "moment";
 import InfoModal from "./component/InforReportPopup";
 import {
@@ -17,9 +16,9 @@ import {
     TitleWarning
 } from "../searchRestaurant/Component/Post/styles";
 import InfoPostModal from "./component/InfoPostPopup";
-import {tr} from "timeago.js/lib/lang";
 import InfoCommentModal from "./component/InfoCommentPopup";
-import warningIcon from "../../images/icon/review/warning.svg";
+import ModalAlert from "./component/ModalAlert";
+import InfoUserModal from "./component/InforUserPopup";
 
 const {Header, Content, Footer, Sider} = Layout;
 
@@ -37,9 +36,13 @@ export default function AdminManagement() {
     const [showModalReport, setShowModalReport] = useState(false);
     const [showModalPost, setShowModalPost] = useState(false);
     const [showModalComment, setShowModalComment] = useState(false);
+    const [showModalUser, setShowModalUser] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [showAlertPosts, setShowAlertPosts] = useState(false);
+    const [showAlertComment, setShowAlertComment] = useState(false);
     const [dataReport, setSetDataReport] = useState({});
     const [selectMenu, setSelectMenu] = useState('1');
+    const [userId, setUserId] = useState('');
     const [postId, setPostId] = useState('');
     const [reportId, setReportId] = useState('');
     const [commentId, setCommentId] = useState('');
@@ -50,6 +53,74 @@ export default function AdminManagement() {
             content: content,
         });
     };
+
+    const columns = [
+        {
+            title: 'STT',
+            dataIndex: 'stt',
+            key: 'stt',
+            width: '4%',
+            render: (text, record, index) => <div>{index + 1}</div>
+        },
+        {
+            title: 'Name',
+            dataIndex: 'username',
+            key: 'username',
+            render: (text) => <div>{text}</div>,
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (text) => <div>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</div>,
+        },
+        {
+            title: 'Trạng thái',
+            key: 'status',
+            dataIndex: 'status',
+            render: (text) => <div>{text === '1' ? 'Kích hoạt' : 'Vô hiệu hóa'}</div>,
+        },
+        {
+            title: 'Role',
+            key: 'role',
+            dataIndex: 'role',
+            render: (text) =>
+                <Tag color="#108ee9" key={text}>
+                    {text}
+                </Tag>,
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle">
+                    <a
+                        onClick={() => {
+                            setShowModalUser(true);
+                            setUserId(record._id)
+                        }}
+                    >Info</a>
+                    {record.role !== 'admin' &&
+                        <a
+                            onClick={() => {
+                                handleChangeStatus(record._id, record.status === '1' ? '0' : '1').then(r => fetchUsers())
+                            }}
+                        >{record.status === '1' ? 'Inactive' : 'Active'}</a>
+                    }
+                </Space>
+            ),
+        },
+    ];
 
 
     const columnsReport = [
@@ -146,8 +217,18 @@ export default function AdminManagement() {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Edit</a>
-                    <a>Delete</a>
+                    <a
+                        onClick={() => {
+                            setShowModalComment(true);
+                            setCommentId(record._id)
+                        }}
+                    >Check</a>
+                    <a
+                        onClick={() => {
+                            setShowAlertComment(true);
+                            setCommentId(record._id)
+                        }}
+                    >Delete</a>
                 </Space>
             ),
         },
@@ -211,32 +292,36 @@ export default function AdminManagement() {
         {
             title: 'Action',
             key: 'action',
-            width: '120px',
+            width: '130px',
             render: (_, record) => (
                 <Space size="middle">
-                    <a onClick={() => {
-                        setShowModalPost(true);
-                        setPostId(record._id)
-                    }}
-                    >Edit</a>
-                    <a>Delete</a>
+                    <a
+                        onClick={() => {
+                            setShowModalPost(true);
+                            setPostId(record._id)
+                        }}
+                    >Check</a>
+                    <a
+                        onClick={() => {
+                            setShowAlertPosts(true);
+                            setPostId(record._id)
+                        }}
+                    >Delete</a>
                 </Space>
             ),
         },
     ];
 
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            const res = await axios.get("http://localhost:8800/api/user/all/all/all/");
-            setListUsers(res.data);
-        };
-        fetchUsers();
-    }, []);
+    const fetchUsers = async () => {
+        const res = await axios.get("http://localhost:8800/api/user/all/all/all/");
+        setListUsers(res.data);
+    };
 
     const fetchPosts = async () => {
         const res = await axios.get("http://localhost:8800/api/post/allPosts/" + user._id);
-        setListPosts(res.data);
+        setListPosts(res.data.sort((p1, p2) => {
+            return new Date(p2.createdAt) - new Date(p1.createdAt);
+        }));
     };
     const fetchComments = async () => {
         const res = await axios.get("http://localhost:8800/api/comment/all/all/");
@@ -248,6 +333,7 @@ export default function AdminManagement() {
     };
 
     useEffect(() => {
+        fetchUsers();
         fetchComments();
         fetchPosts();
         fetchReports();
@@ -257,6 +343,34 @@ export default function AdminManagement() {
     const handleReportDelete = async (id) => {
         try {
             await axios.delete("http://localhost:8800/api/report/" + id);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handlePostDelete = async (id) => {
+        try {
+            await axios.delete("http://localhost:8800/api/post/deleteAdmin/" + id);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleCommentDelete = async (id) => {
+        try {
+            await axios.delete("http://localhost:8800/api/comment/adminRole/" + id);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleChangeStatus = async (id, status) => {
+        try {
+            await axios.put("http://localhost:8800/api/user/status/" + id,
+                {
+                    status: status,
+                }
+            );
         } catch (err) {
             console.log(err);
         }
@@ -401,38 +515,54 @@ export default function AdminManagement() {
                 commentId={commentId}
                 onsubmit={(value) => fetchComments(value)}
             />
-            <ModalCustom
+            <InfoUserModal
+                title={<TitleWarning>Thông tin User</TitleWarning>}
+                visible={showModalUser}
+                onCancel={() => setShowModalUser(false)}
+                userId={userId}
+            />
+            <ModalAlert
+                title={<TitleWarning>Cảnh báo</TitleWarning>}
+                visible={showAlertPosts}
+                onCancel={() => setShowAlertPosts(false)}
+                onsubmit={() => {
+                    handlePostDelete(postId).then(r => {
+                        setShowAlertPosts(false);
+                        success('Xóa bài viết thành công');
+                        fetchPosts();
+                    });
+                }}
+                content={'Bạn có chắc chắn muốn xóa bài viết này chứ ?'}
+
+            />
+            <ModalAlert
+                title={<TitleWarning>Cảnh báo</TitleWarning>}
+                visible={showAlertComment}
+                onCancel={() => setShowAlertComment(false)}
+                onsubmit={() => {
+                    handleCommentDelete(commentId).then(r => {
+                        setShowAlertComment(false);
+                        success('Xóa comment thành công');
+                        fetchComments();
+                    });
+                }}
+                content={'Bạn có chắc chắn muốn xóa Comment này chứ ?'}
+
+            />
+            <ModalAlert
                 title={<TitleWarning>Cảnh báo</TitleWarning>}
                 visible={showAlert}
                 onCancel={() => setShowAlert(false)}
-                footer={
-                    <DivFooter>
-                        <ButtonSubmit
-                            onClick={() => {
-                                handleReportDelete(reportId).then(r => {
-                                    setShowAlert(false);
-                                    success('Xóa report thành công');
-                                    fetchReports();
-                                });
-                            }}
-                        >
-                            Đồng ý xóa
-                        </ButtonSubmit>
-                        <ButtonSubmit
-                            onClick={() => {
-                                setShowAlert(false);
-                            }}
-                        >
-                            Đóng
-                        </ButtonSubmit>
-                    </DivFooter>
-                }
-            >
-                <BoxContent>
-                    <IconWarning src={warningIcon}/>
-                    <TitleWarning>Bạn có chắc chắn muốn xóa Report này chứ ?</TitleWarning>
-                </BoxContent>
-            </ModalCustom>
+                onsubmit={() => {
+                    handleReportDelete(reportId).then(r => {
+                        setShowAlert(false);
+                        success('Xóa report thành công');
+                        fetchReports();
+                    });
+                }}
+                content={'Bạn có chắc chắn muốn xóa Report này chứ ?'}
+
+            />
         </Layout>
     );
 };

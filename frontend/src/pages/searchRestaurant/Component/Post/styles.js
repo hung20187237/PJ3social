@@ -121,9 +121,15 @@ export const TextItem = styled.div`
 export const ModalCustom = styled(Modal)`
   & .ant-modal-content {
     width: ${props => props.width || '471px'};
+    max-height: 75vh;
     background: #FFF;
     border-radius: 12px;
     box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.20);
+    .ant-modal-body {
+      max-height: calc(75vh - 112px);
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
   }
   & .ant-modal-header {
     border-radius: 12px 12px 0 0;

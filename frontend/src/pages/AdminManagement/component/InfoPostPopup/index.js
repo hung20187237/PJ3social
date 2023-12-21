@@ -6,25 +6,59 @@ import {
     DivFooter, IconWarning,
     ModalCustom, TitleWarning,
 } from "../../../../pages/searchRestaurant/Component/Post/styles";
-import {Col, Row, Tag, message} from "antd";
+import {Col, Row, Tag, message, Table, Space} from "antd";
 import {ReportContainer} from "../../../../components/post/styled";
 import ReactImageGrid from "@cordelia273/react-image-grid";
 import warningIcon from "../../../../images/icon/review/warning.svg";
+import moment from "moment/moment";
 
 const InfoPostModal = ({title, visible, onCancel, onsubmit, postId}) => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const [messageApi, contextHolder] = message.useMessage();
     const [posts, setPosts] = useState({});
+    const [listComments, setListComments] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const listUrl = posts.img && posts.img.map((img) => PF + img);
+
+    const columnsComment = [
+        {
+            title: 'STT',
+            dataIndex: 'stt',
+            key: 'stt',
+            width: '4%',
+            render: (text, record, index) => <div>{index + 1}</div>
+        },
+        {
+            title: 'UserId',
+            dataIndex: 'userId',
+            key: 'userId',
+            render: (text) => <div>{text}</div>,
+        },
+        {
+            title: 'Desc',
+            dataIndex: 'desc',
+            key: 'desc',
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (text) => <div>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</div>,
+        },
+    ];
 
     useEffect(() => {
         const fetchPosts = async () => {
             const res = await axios.get("http://localhost:8800/api/post/" + postId);
             setPosts(res.data);
         };
+        const fetchComments = async () => {
+            const res = await axios.get("http://localhost:8800/api/comment/postManagement/" + postId);
+            setListComments(res.data);
+        };
         if (postId) {
             fetchPosts();
+            fetchComments();
         }
     }, [postId]);
 
@@ -54,7 +88,7 @@ const InfoPostModal = ({title, visible, onCancel, onsubmit, postId}) => {
         <>
             {contextHolder}
             <ModalCustom
-                width={'1000px'}
+                width={'1248px'}
                 title={title}
                 open={visible}
                 onCancel={onCancel}
@@ -147,6 +181,21 @@ const InfoPostModal = ({title, visible, onCancel, onsubmit, postId}) => {
                             {posts.img && <ReactImageGrid images={listUrl} countFrom={4}/>}
                         </Col>
                     </Row>
+                    <Row>
+                        <Col span={4}>
+                            Danh sách Comment:
+                        </Col>
+                        <Col span={20}/>
+                    </Row>
+                    <Row>
+                        <Table
+                            style={{
+                                width: '100%'
+                            }}
+                            columns={columnsComment}
+                            dataSource={listComments}
+                        />
+                    </Row>
                 </ReportContainer>
                 <ModalCustom
                     title={<TitleWarning>Cảnh báo</TitleWarning>}
@@ -160,7 +209,7 @@ const InfoPostModal = ({title, visible, onCancel, onsubmit, postId}) => {
                                         setShowAlert(false);
                                         success();
                                         onsubmit()
-                                        handleReportDelete().then(r => onCancel())
+                                        onCancel()
                                     });
                                 }}
                             >
