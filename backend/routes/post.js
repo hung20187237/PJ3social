@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
 const User = require("../models/User");
+const Report = require("../models/Report");
+const Comment = require("../models/Comment");
 
 //create a post
 router.post("/", async (req, res) => {
@@ -101,6 +103,8 @@ router.delete("/deleteAdmin/:id", async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
         await post.deleteOne();
+        await Report.deleteMany({postReportId: req.params.id});
+        await Comment.deleteMany({postId: req.params.id});
         res.status(200).json("the post has been deleted");
     } catch (err) {
         res.status(500).json(err);
@@ -194,10 +198,21 @@ router.get("/profile/:username", async (req, res) => {
         res.status(500).json(err);
     }
 });
+
 //get all posts
 router.get("/allPosts/:username", async (req, res) => {
     try {
         const posts = await Post.find();
+        res.status(200).json(posts);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//get post by userID
+router.get("/byUserId/:id", async (req, res) => {
+    try {
+        const posts = await Post.find({userId: req.params.id});
         res.status(200).json(posts);
     } catch (err) {
         res.status(500).json(err);

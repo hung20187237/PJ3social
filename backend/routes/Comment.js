@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Comment = require('../models/Comment')
 const Post = require('../models/Post')
 const User = require('../models/User')
+const Report = require("../models/Report");
 
 //create a comment
 router.post("/", async (req, res) => {
@@ -60,6 +61,7 @@ router.delete("/adminRole/:id", async (req, res) => {
     try {
         const comment = await Comment.findById(req.params.id);
         await comment.deleteOne();
+        await Report.deleteMany({commentReportId: req.params.id});
         res.status(200).json("the comment has been deleted");
     } catch (err) {
         res.status(500).json(err);
@@ -86,6 +88,16 @@ router.get("/onPost/:postId", async (req, res) => {
             users.push(user)
         }
         res.status(200).json({comments, users});
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//get comments on postManagement
+router.get("/postManagement/:postId", async (req, res) => {
+    try {
+        const comments = await Comment.find({postId: req.params.postId});
+        res.status(200).json(comments);
     } catch (err) {
         res.status(500).json(err);
     }

@@ -57,6 +57,18 @@ router.get("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+// get user with admin role
+router.get("/adminRole/:id", async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const user = await User.findById(userId)
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //searchtextsearch
 router.get("/textSearch/", async (req, res) => {
   const searchText = req.query.searchText;
@@ -79,6 +91,22 @@ router.get("/textSearch/", async (req, res) => {
       res.status(500).json(err);
     }
   });
+
+//change status user
+router.put("/status/:id", async (req, res) => {
+  const userId = req.params.id;
+  const newStatus = req.body.status;
+  console.log('userId', userId, newStatus)
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      $set: { status: newStatus }
+    });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //get followings
 router.get("/followings/:id", async (req, res) => {
   try {
