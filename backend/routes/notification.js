@@ -24,7 +24,7 @@ router.delete("/", async (req, res) => {
     try {
       const deletedNotification = await Notification.findOne({
         sendUserId: req.body.sendUserId,
-        receiveUserId: req.body.receiveUserId, 
+        receiveUserId: req.body.receiveUserId,
         type: req.body.type
     });
       await deletedNotification.deleteOne();
@@ -32,6 +32,17 @@ router.delete("/", async (req, res) => {
     } catch (err) {
         console.log(err)
       res.status(500).json(err);
+    }
+});
+
+//delete request rac
+router.delete("/requestSpam/", async (req, res) => {
+    try {
+        await Notification.deleteMany({postReportId: req.params.id});
+        res.status(200).json('delete friend request successfully');
+    } catch (err) {
+        console.log(err)
+        res.status(500).json(err);
     }
 });
 
