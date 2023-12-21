@@ -36,6 +36,16 @@ router.delete("/byPostId/:id", async (req, res) => {
     }
 });
 
+//delete a report with CommentId
+router.delete("/byCommentId/:id", async (req, res) => {
+    try {
+        await Report.deleteMany({commentReportId: req.params.id});
+        res.status(200).json("the report has been deleted");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 //get all post
 router.get("/all", async (req, res) => {
     try {

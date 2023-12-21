@@ -46,6 +46,8 @@ export default function Post({ post, user1 }) {
   const body = post.desc;
   const listUrl = post.img.map((img) => PF + img);
 
+  console.log('comments', comments)
+
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
   }, []);
@@ -69,7 +71,7 @@ export default function Post({ post, user1 }) {
   useEffect(() => {
     const fetchComments = async () => {
       const res = await axios.get(
-        "http://localhost:8800/api/comment/" + post._id
+        "http://localhost:8800/api/comment/onPost/" + post._id
       );
       const commentsSort = res.data.comments.sort((p1, p2) => {
         return new Date(p2.createdAt) - new Date(p1.createdAt);

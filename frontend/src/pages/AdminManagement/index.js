@@ -330,13 +330,21 @@ export default function AdminManagement() {
                                 <BoxIcon src={filterIcon}/>
                             </BoxFilter>
                         </SearchBar>
-                        <Link to={"/profile/" + user.username}>
-                            <img
-                                src={user.avatar ? PF + user.avatar : PF + "person/noAvatar.png"}
-                                alt=""
-                                className="topbarImg"
-                            />
-                        </Link>
+                        <div style={{display: 'flex', gap: '20px'}}>
+                            <Link to={"/"}>
+                                <div>
+                                    Trang chủ
+                                </div>
+                            </Link>
+                            <Link to={"/profile/" + user.username}>
+                                <img
+                                    src={user.avatar ? PF + user.avatar : PF + "person/noAvatar.png"}
+                                    alt=""
+                                    className="topbarImg"
+                                />
+                            </Link>
+                        </div>
+
                     </ContainerHeader>
                 </Header>
                 <Content
@@ -391,7 +399,7 @@ export default function AdminManagement() {
                 visible={showModalComment}
                 onCancel={() => setShowModalComment(false)}
                 commentId={commentId}
-                onsubmit={(value) => console.log(value)}
+                onsubmit={(value) => fetchComments(value)}
             />
             <ModalCustom
                 title={<TitleWarning>Cảnh báo</TitleWarning>}

@@ -66,7 +66,6 @@ router.delete("/adminRole/:id", async (req, res) => {
     }
 });
 
-
 //get all comments
 router.get("/all/all", async (req, res) => {
     try {
@@ -78,7 +77,7 @@ router.get("/all/all", async (req, res) => {
 });
 
 //get comments on post
-router.get("/:postId", async (req, res) => {
+router.get("/onPost/:postId", async (req, res) => {
     try {
         const comments = await Comment.find({postId: req.params.postId});
         const users = []
