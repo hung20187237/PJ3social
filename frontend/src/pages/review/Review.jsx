@@ -5,7 +5,7 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import CancelIcon from "@mui/icons-material/Cancel";
 import React, {useContext, useRef, useState} from "react";
 import {Context} from "../../context/Context";
-import {Form} from "antd";
+import {Form, Select} from "antd";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Topbar from "../../components/topbar/Topbar";
 import BasicRating from "../../components/star/star";
@@ -60,7 +60,7 @@ export default function Review() {
     const newPost = {
       userId: user._id,
       desc: resultDesc === 0 ? desc.current.getContent() : '',
-      title: value.name,
+      title: value.name.trim(),
       rating: rating.current,
       place: value.place,
       tagkv: filterValue.kv,

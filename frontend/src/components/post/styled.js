@@ -13,6 +13,13 @@ export const ItemMore = styled.div`
   background: rgb(255, 241, 241);
 `;
 
+export const PostTitle = styled.div`
+  font-size: 16x;
+  font-weight: 700;
+  margin: 0 10px;
+  cursor: pointer;
+`;
+
 export const ReportContainer = styled.div`
   min-height: 200px;
   overflow-y: auto;

@@ -102,9 +102,6 @@ export default function SearchPost(username) {
 
 // In ra object chứa các thuộc tính rating của phần tử được tính trung bình
 
-
-    console.log('post', post)
-
     const IntegerStep = ({core}) => {
         const [inputValue, setInputValue] = useState(core);
         return (

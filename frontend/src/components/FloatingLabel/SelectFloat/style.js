@@ -13,9 +13,13 @@ export const SelectFloatStyle = styled(Select)`
   }
   .ant-select-selection-placeholder {
     line-height: 40px !important;
+    display: flex;
+    align-items: center;
   }
   .ant-select-selection-item {
     line-height: 40px !important;
+    display: flex;
+    align-items: center;
   }
   &.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
     font-weight: 600;

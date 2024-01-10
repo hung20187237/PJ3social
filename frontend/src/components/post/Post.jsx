@@ -2,7 +2,7 @@ import "./Post.css";
 import React, { useContext, useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { format } from "timeago.js";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { Context } from "../../context/Context";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import SendIcon from "@mui/icons-material/Send";
@@ -20,7 +20,7 @@ import {
   TextItem,
   TitleWarning
 } from "../../pages/searchRestaurant/Component/Post/styles";
-import {ItemMore, ReportContainer, TextAreaCustom} from "./styled";
+import {ItemMore, PostTitle, postTitle, ReportContainer, TextAreaCustom} from "./styled";
 import {FileExclamationOutlined} from "@ant-design/icons";
 import ReportModal from "./Component/ReportModal";
 
@@ -40,13 +40,14 @@ export default function Post({ post, user1 }) {
   const [showReport, setShowReport] = useState(false);
   const [showReportComment, setShowReportComment] = useState(false);
   const [commentId, setCommentId] = useState('');
+  const [restaurantId, setRestaurantId] = useState('');
   const { user: currentUser, notifyFlag, dispatch } = useContext(Context);
   const comment = useRef();
   const reply = useRef();
   const body = post.desc;
   const listUrl = post.img.map((img) => PF + img);
+  const navigate = useNavigate();
 
-  console.log('comments', comments)
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
@@ -66,6 +67,19 @@ export default function Post({ post, user1 }) {
     };
     fetchUser();
   }, []);
+
+  //lay thong tin restaurant
+  useEffect(() => {
+    const fetchIdPost = async () => {
+      const res = await axios.get(
+          "http://localhost:8800/api/restaurant/getId/" + post.title.trim()
+      );
+      setRestaurantId(res.data)
+    }
+    fetchIdPost();
+  }, []);
+
+
 
   //lay cac comment thuoc bai dang
   useEffect(() => {
@@ -441,11 +455,13 @@ export default function Post({ post, user1 }) {
                 />
               </Link>
               <div>
-                <div>
+                <div style={{display: 'flex'}}>
                   <span className="postUsername">{user.username}</span>
                   <span className="postDate">{format(post.createdAt)}</span>
                   <ArrowRightIcon />
-                  <span className="postTitle">{post.title}</span>
+                  <PostTitle
+                    onClick={() => navigate(`/searchRestaurant/${restaurantId}`)}
+                  >{post.title}</PostTitle>
                 </div>
                 <div style={{ margin: "0 10px" }}>
                   <RoomIcon htmlColor="green" className="reviewIcon" />
