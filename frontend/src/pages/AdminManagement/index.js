@@ -19,6 +19,7 @@ import InfoPostModal from "./component/InfoPostPopup";
 import InfoCommentModal from "./component/InfoCommentPopup";
 import ModalAlert from "./component/ModalAlert";
 import InfoUserModal from "./component/InforUserPopup";
+import ModalChangeRole from "./component/ChangeRole";
 
 const {Header, Content, Footer, Sider} = Layout;
 
@@ -37,6 +38,7 @@ export default function AdminManagement() {
     const [showModalPost, setShowModalPost] = useState(false);
     const [showModalComment, setShowModalComment] = useState(false);
     const [showModalUser, setShowModalUser] = useState(false);
+    const [showModalChangeRole, setShowModalChangeRole] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [showAlertPosts, setShowAlertPosts] = useState(false);
     const [showAlertComment, setShowAlertComment] = useState(false);
@@ -46,6 +48,7 @@ export default function AdminManagement() {
     const [postId, setPostId] = useState('');
     const [reportId, setReportId] = useState('');
     const [commentId, setCommentId] = useState('');
+    const [userRole, setUserRole] = useState('user');
 
     const success = (content) => {
         messageApi.open({
@@ -111,11 +114,20 @@ export default function AdminManagement() {
                         }}
                     >Info</a>
                     {record.role !== 'admin' &&
-                        <a
-                            onClick={() => {
-                                handleChangeStatus(record._id, record.status === '1' ? '0' : '1').then(r => fetchUsers())
-                            }}
-                        >{record.status === '1' ? 'Inactive' : 'Active'}</a>
+                        <>
+                            <a
+                                onClick={() => {
+                                    handleChangeStatus(record._id, record.status === '1' ? '0' : '1').then(r => fetchUsers())
+                                }}
+                            >{record.status === '1' ? 'Inactive' : 'Active'}</a>
+                            <a
+                                onClick={() => {
+                                    setUserId(record._id)
+                                    setShowModalChangeRole(true);
+                                    setUserRole(record.role)
+                                }}
+                            >Change Role</a>
+                        </>
                     }
                 </Space>
             ),
@@ -376,6 +388,18 @@ export default function AdminManagement() {
         }
     };
 
+    const handleChangeRole = async (id, role) => {
+        try {
+            await axios.put("http://localhost:8800/api/user/role/" + id,
+                {
+                    role: role,
+                }
+            );
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
 
     return (
         <Layout hasSider>
@@ -415,7 +439,9 @@ export default function AdminManagement() {
                         height: 'calc(100vh - (55px + 130px + 16px + 32px)'
                     }}
                 >
-                    <Menu.Item key="1">Quản lý User</Menu.Item>
+                    {user.role === 'admin' &&
+                        <Menu.Item key="1">Quản lý User</Menu.Item>
+                    }
                     <Menu.Item key="2">Quản lý Posts</Menu.Item>
                     <Menu.Item key="3">Quản lý Comment</Menu.Item>
                     <Menu.Item key="4">Quản lý Report</Menu.Item>
@@ -520,6 +546,19 @@ export default function AdminManagement() {
                 visible={showModalUser}
                 onCancel={() => setShowModalUser(false)}
                 userId={userId}
+            />
+            <ModalChangeRole
+                title={<TitleWarning>Phân quyền người dùng</TitleWarning>}
+                visible={showModalChangeRole}
+                onCancel={() => setShowModalChangeRole(false)}
+                onsubmit={(role) => {
+                    handleChangeRole(userId, role).then(r => {
+                        setShowModalChangeRole(false);
+                        success('phân quyền User thành công');
+                        fetchUsers();
+                    });
+                }}
+                role={userRole}
             />
             <ModalAlert
                 title={<TitleWarning>Cảnh báo</TitleWarning>}

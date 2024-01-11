@@ -107,6 +107,20 @@ router.put("/status/:id", async (req, res) => {
   }
 });
 
+//change status user
+router.put("/role/:id", async (req, res) => {
+  const userId = req.params.id;
+  const newRole = req.body.role;
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      $set: { role: newRole }
+    });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //get followings
 router.get("/followings/:id", async (req, res) => {
   try {

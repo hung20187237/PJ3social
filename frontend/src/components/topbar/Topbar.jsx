@@ -384,7 +384,7 @@ export default function Topbar(socket) {
                         className="topbarImg"
                     />
                 </Link>
-                {user.role === 'admin' &&
+                {user.role !== 'user' &&
                     <span className="topbarRightLogout" onClick={handleClickAdmin}>
                 Admin
             </span>
