@@ -133,7 +133,7 @@ export default function SearchPost(username) {
       <Topbar />
       <div className="newfeedContainer">
         <Sidebar />
-        <div className="bodyNewFeed">
+        <div className="bodyNewFeedRes">
             <div className="Place_resTop__1xCCM">
             <Flex>
               <h1>{restaurant.name}</h1>

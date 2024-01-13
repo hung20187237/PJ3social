@@ -221,13 +221,11 @@ export const ReactImageGridCustom = styled(ReactImageGrid)`
   grid-template-columns: 2fr 2fr 1fr !important;
   grid-template-rows: repeat(2, 1fr) !important;
   & .sc-gsDJrp:nth-child(1) {
-    height: 500px;
-    width: 500px;
+    width: 100%;
     grid-row: 1 / span 2 !important;
   }
   & .sc-gsDJrp:nth-child(2) {
-    height: 500px;
-    width: 500px;
+    width: 100%;
     grid-row: 1 / span 2;
   }
   

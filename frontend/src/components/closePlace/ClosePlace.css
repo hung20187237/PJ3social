@@ -7,11 +7,16 @@
     display: flex;
     font-size: 18px;
     color: #7a7a7a;
-    padding-left: 10px;
+    max-width: 250px;
 }
 .rightbarPlaceName{
+    display: flex;
     font-size: 20px;
     font-weight: 700;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .rightbarPlaceImg {
     width: 120px;

@@ -50,7 +50,7 @@ export default function Feed({ username }) {
                       console.log('listUrl', listUrl)
                       return(
                           <ItemSuggest>
-                            <a href={`/searchRestaurant/${item.id}`}>
+                            <a href={`/searchRestaurant/${item._id}`}>
                                 <CardSuggest>
                                     <CardImageSuggest>
                                         <CardImageWrapperSuggest>

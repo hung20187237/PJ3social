@@ -22,6 +22,7 @@ export const TittleSuggest = styled.div`
 
 export const ContentSuggest = styled.div`
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;

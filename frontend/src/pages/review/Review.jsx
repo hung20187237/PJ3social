@@ -191,7 +191,7 @@ export default function Review() {
             <hr className="reviewHr" />
           </div>
           <div className="bodyReview">
-            <div className="reviewLeft">
+            <div className="reviewLeft" style={{gap: '40px'}}>
               <div className="starRating">
                 <h2>Xếp hạng của bạn :</h2>
                 <div style={{width: '420px'}}>
@@ -281,16 +281,6 @@ export default function Review() {
                   />
                 </div>
               </div>
-              <hr className="reviewHr" />
-              {mutiupload && (
-                  <div className="reviewImgContainer">
-                    {<ReactImageGrid images={mutiupload} countFrom={5} />}
-                    <CancelIcon
-                        className="reviewCancelImg"
-                        onClick={() => setMutiupload(null)}
-                    />
-                  </div>
-              )}
               <form className="reviewBottom" onSubmit={submitHandler}>
                 <div className="reviewOptions">
                   <label htmlFor="file" className="reviewOption">
@@ -404,6 +394,15 @@ export default function Review() {
                   />
                 </div>
               </FormCustom>
+              {mutiupload && (
+                  <div className="reviewImgContainer">
+                    {<ReactImageGrid images={mutiupload} countFrom={5} />}
+                    <CancelIcon
+                        className="reviewCancelImg"
+                        onClick={() => setMutiupload(null)}
+                    />
+                  </div>
+              )}
             </div>
           </div>
         </div>

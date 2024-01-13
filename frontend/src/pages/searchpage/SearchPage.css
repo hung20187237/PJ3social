@@ -2,8 +2,11 @@
     display: flex;
     width: 100%;
     padding: 10px;
+    background: #e1e1e1;
+
 }
 .searchsidebar {
+    background: #fff;
     flex: 2;
     height: calc(100vh - 50px);
     overflow-y: scroll;
@@ -107,6 +110,8 @@
 }
 
 .bodysearchFeed{
+    margin-right: 15%;
+    margin-left: 15%;
     padding: 10px;
     flex:6.5
 }

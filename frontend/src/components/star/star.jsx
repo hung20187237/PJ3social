@@ -24,7 +24,7 @@ function BasicRating(props, ref) {
     <Box
       sx={{
         "& > legend": { mt: 2 },
-        width: 300,
+        width: props.width || 300,
         display: "flex",
         alignItems: "center",
       }}

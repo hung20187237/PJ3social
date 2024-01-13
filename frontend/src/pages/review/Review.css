@@ -35,7 +35,10 @@
     text-align: center;
   }
   .starRating{
-      padding : 0px 4px 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding : 0px 4px 12px 8px;
   }
   
   
@@ -106,6 +109,7 @@
   }
   
   .reviewImgContainer{
+    margin: 0 7%;
     padding: 0 20px 10px 20px;
     position: relative;
     flex-wrap: wrap;
