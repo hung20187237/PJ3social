@@ -19,7 +19,7 @@ import {
     FlexColum,
     ItemInteger, ItemSwiper, LabelInteger, ListPostContainer, PostContainer, PostItem,
     ReactImageGridCustom,
-    ReviewContainer, TextPostContainer, TitlePostContainer
+    ReviewContainer, TextPostContainer, TitleModal, TitlePostContainer
 } from "./styles";
 import {Button, Col, InputNumber, Modal, Row, Slider} from "antd";
 import {FaCar, FaChild, FaCloudSun, FaHeart, FaMotorcycle, FaRegCreditCard, FaWifi} from "react-icons/fa";
@@ -53,10 +53,46 @@ export default function SearchPost(username) {
       setPost(postRes.data);
     };
     fetchPosts();
-  }, []);
+  }, [isModalOpen]);
 
 
-  console.log(restaurant);
+    const submitHandler = async (value) => {
+        const newPost = {
+            userId: value.userId,
+            desc: value.desc,
+            title: restaurant.name,
+            rating: value.rating,
+            place: restaurant.places,
+            tagkv: post[0].tagkv,
+            tagtc: post[0].tagtc,
+            tagdm: post[0].tagdm,
+        };
+        if (value.fileList) {
+            const data = new FormData();
+            let fileName = [];
+            console.log('value.fileList',value.fileList)
+
+
+            value.fileList?.map((file) => data.append("images", file.originFileObj));
+
+            console.log('data',data)
+            try {
+                await axios
+                    .post("http://localhost:8800/api/mutiupload", data)
+                    .then((res) => res.data)
+                    .then((data) =>
+                        data.file.map((file) => {
+                            fileName.push(file.filename);
+                        })
+                    );
+                newPost.img = Object.values(fileName);
+            } catch (err) {}
+        }
+        try {
+            await axios.post("http://localhost:8800/api/post", newPost);
+            setIsModalOpen(false);
+        } catch (err) {}
+    };
 
   function getAllImages(objectsArray) {
     return objectsArray.flatMap(obj => obj.img);
@@ -68,9 +104,7 @@ export default function SearchPost(username) {
     const showModal = () => {
         setIsModalOpen(true);
     };
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -164,7 +198,7 @@ export default function SearchPost(username) {
                             <p>{calculateAverage(averageRating)}</p>
                             <div>
                                 <h2>Tuyệt vời</h2>
-                                <span>/5 (1 đánh giá)</span>
+                                <span>{`/5 (${post.length} đánh giá)`}</span>
                             </div>
                         </BoxScore>
                         <FlexColum>
@@ -272,7 +306,12 @@ export default function SearchPost(username) {
                             <span>({post.length})</span>
                         </h2>
                         <ButtonReview onClick={showModal}>Viết đánh giá</ButtonReview>
-                        <ModalReview visible={isModalOpen} onSubmit={handleOk} onCancel={handleCancel}/>
+                        <ModalReview
+                            title={<TitleModal>{`Đánh giá ${restaurant.name}`}</TitleModal>}
+                            visible={isModalOpen}
+                            onSubmit={submitHandler}
+                            onCancel={handleCancel}
+                        />
                     </TitlePostContainer>
                     <ContentPostContainer>
                         <BoxImageContent>

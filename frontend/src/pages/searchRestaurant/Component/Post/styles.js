@@ -81,17 +81,11 @@ export const PostUserVote = styled.div`
 `;
 
 export const ReactImageGridCustom = styled(ReactImageGrid)`
-  grid-template-columns: 2fr 2fr 2fr 2fr !important;
-  grid-template-rows: repeat(1, 1fr) !important;
-  & .sc-gsDJrp:nth-child(1) {
+  display: flex !important;
+  width: 100%;
+  & .sc-gsDJrp {
     height: 250px;
-    width: 250px;
-    grid-row: 1 / span 2 !important;
-  }
-  & .sc-gsDJrp:nth-child(2) {
-    height: 250px;
-    width: 250px;
-    grid-row: 1 / span 2;
+    width: 25%;
   }
   
 `;

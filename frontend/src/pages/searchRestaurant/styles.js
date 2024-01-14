@@ -77,6 +77,42 @@ export const TitlePostContainer = styled.div`
     }
   }
 `;
+
+export const TitleModal = styled.div`
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  color: #000;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`;
+
+export const BodyModal = styled.div`
+  min-height: 200px;
+  overflow-y: auto;
+  padding: 16px;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const RatingContainer = styled.div`
+  h3 {
+    font-size: 18px;
+    color: #898c95;
+  }
+`;
+
+export const ReviewInputContainer = styled.div`
+  h3 {
+    font-size: 18px;
+    color: #898c95;
+  }
+`;
+
 export const BoxImageContent = styled.div`
   width: 30%;
   height: 100%;
@@ -116,9 +152,12 @@ export const ContentPostContainer = styled.div`
 `;
 
 export const ListPostContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   padding: 20px 0;
   margin-top: 20px;
   border-top: 1px solid #ddd;
+  gap: 8px;
 `;
 
 export const PostItem = styled.div`

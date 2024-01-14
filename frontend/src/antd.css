@@ -21281,8 +21281,8 @@ textarea.ant-mentions {
 }
 .ant-modal-close-x {
   display: block;
-  width: 56px;
-  height: 56px;
+  /*width: 56px;*/
+  /*height: 56px;*/
   font-size: 16px;
   font-style: normal;
   line-height: 56px;
@@ -27077,6 +27077,9 @@ div.ant-typography-edit-content.ant-typography-rtl {
   position: absolute;
   top: 50%;
   left: 50%;
+  display: flex;
+  justify-content: center;
+  inset-inline-start: 50% !important;
   z-index: 10;
   white-space: nowrap;
   transform: translate(-50%, -50%);
