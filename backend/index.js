@@ -226,6 +226,9 @@ trainModel().then(() => {
 });
 
 
+// socket
+
+
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
