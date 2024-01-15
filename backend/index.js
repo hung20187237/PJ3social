@@ -21,6 +21,10 @@ const path = require("path");
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
+const tf = require('@tensorflow/tfjs');
+const Post = require("./models/Post");
+
+const modelFilePath = 'linear_regression_model';
 
 
 dotenv.config();
@@ -126,6 +130,97 @@ app.post('/api/check-content', async (req, res) => {
 });
 
 
+const xs = tf.tensor2d([
+  [100, 20, 4.5],
+  [150, 25, 3.5],
+  [80, 15, 4.0],
+  [120, 30, 4.8],
+  [200, 35, 3.0],
+  [90, 18, 4.2],
+  [130, 28, 4.6],
+  [180, 40, 3.8],
+  [160, 32, 4.4],
+  [110, 22, 4.7],
+  [140, 26, 4.1],
+  [170, 38, 3.3],
+  [95, 19, 4.3],
+  [105, 21, 4.9],
+  [210, 45, 2.5],
+  [115, 24, 3.7],
+  [125, 29, 4.0],
+  [145, 33, 3.2],
+  [155, 36, 3.6],
+]);
+const ys = tf.tensor2d([
+  [8],
+  [7],
+  [6],
+  [9],
+  [5],
+  [7],
+  [8],
+  [6],
+  [7],
+  [9],
+  [6],
+  [7],
+  [6],
+  [8],
+  [4],
+  [7],
+  [8],
+  [5],
+  [6],
+]);
+
+const inputSize = 3; // Số lượng thuộc tính đầu vào (like, comment, rating)
+const outputSize = 1; // Số lượng đầu ra (xếp hạng)
+const model = tf.sequential();
+model.add(tf.layers.dense({ units: outputSize, inputShape: [inputSize] }));
+
+model.compile({
+  optimizer: tf.train.adam(),
+  loss: 'meanSquaredError',
+  metrics: ['mse'],
+});
+
+// Huấn luyện mô hình
+const trainModel = async () => {
+  await model.fit(xs, ys, { epochs: 1000 });
+  console.log('Model trained successfully!');
+};
+const calculateAverage = obj => {
+  let sum = 0;
+  let count = 0;
+
+  for (let key in obj) {
+    sum += obj[key];
+    count++;
+  }
+  return count === 0 ? 0 : sum / count;
+};
+trainModel().then(() => {
+  const posts = Post.find();
+  const comments = Comment.find();
+  const combinedArray = posts.map(post => ({
+    ...post,
+    comments: comments.filter(comment => comment.postId === post._id),
+  }));
+  console.log('combinedArray', combinedArray)
+
+  const newPredictions = combinedArray.map(data => {
+    const input = tf.tensor2d([data.likes.length, calculateAverage(data.rating), data.comments.length]);
+    const prediction = model.predict(input);
+    return prediction.dataSync()[0].toFixed(2);
+  });
+  console.log('newPredictions', newPredictions)
+  
+  const newLikes = 120;
+  const newComments = 25;
+  const newRating = 4.2
+  const prediction = model.predict(tf.tensor2d([[newLikes, newComments, newRating]]));
+  console.log('prediction', prediction.dataSync()[0])
+});
 
 
 
