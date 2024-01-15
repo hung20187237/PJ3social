@@ -8,7 +8,7 @@ import { Context } from "../../context/Context";
 import axios from "axios";
 import { useParams } from "react-router";
 
-export default function SearchPost(username) {
+export default function SearchPost({username, socket}) {
   const [posts, setPosts] = useState();
   const { user } = useContext(Context);
   const { postid } = useParams();
@@ -24,11 +24,11 @@ export default function SearchPost(username) {
   console.log(posts);
   return (
     <>
-      <Topbar />
+      <Topbar socket={socket}/>
       <div className="newfeedContainer">
-        <Sidebar />
+        <Sidebar socket={socket}/>
         <div className="bodyNewFeed">
-        {posts && <Post key={posts._id} post={posts} user1={user} />}
+        {posts && <Post key={posts._id} post={posts} user1={user} socket={socket}/>}
         </div>
         <Rightbar />
       </div>

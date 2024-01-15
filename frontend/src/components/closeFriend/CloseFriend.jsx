@@ -7,17 +7,30 @@ import { useContext, useEffect, useState,useRef} from "react";
 import { Context } from "../../context/Context";
 import { Link } from "react-router-dom";
 
-export default function CloseFriend({user}) {
+export default function CloseFriend({user, socket}) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [followed, setFollowed] = useState(false);
   const { user: currentUser, dispatch } = useContext(Context);
+  const [newNotification, setNewNotification] = useState({});
 
   useEffect(() => { 
     if (currentUser && currentUser.followings.includes(user._id)) { 
       setFollowed(true);
     }
-
   }, [])
+
+  useEffect(() => {
+    socket.current?.on("getNotification", (data) => {
+      setNewNotification({
+        sendUserId: data.sendUserId,
+        sendUserName: data.sendUserName,
+        receiveUserId: data.receiveUserId,
+        type: data.type,
+        post: data.post,
+        createdAt: data.timestamp
+      })
+    });
+  }, [socket.current]);
 
   const handleClickFollowOrUnfollow = async () => {
     try {
@@ -27,12 +40,24 @@ export default function CloseFriend({user}) {
         });
         dispatch({ type: "UNFOLLOW", payload: user._id });
         setFollowed(false);
+        socket.current?.emit("sendNotification", {
+          sendUserName: currentUser.username,
+          sendUserId: currentUser._id,
+          receiveUserId: user._id,
+          type:4
+        });
       } else {
         await axios.put(`http://localhost:8800/api/user/${user._id}/follow`, {
           userId: currentUser._id,
         });
         dispatch({ type: "FOLLOW", payload: user._id });
         setFollowed(!followed);
+        socket.current?.emit("sendNotification", {
+          sendUserName: currentUser.username,
+          sendUserId: currentUser._id,
+          receiveUserId: user._id,
+          type:7
+        });
       }
     
     } catch (err) {

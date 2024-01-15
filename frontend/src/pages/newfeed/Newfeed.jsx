@@ -7,7 +7,7 @@ import Post from "../../components/post/Post";
 import { Context } from "../../context/Context";
 import axios from "axios";
 
-export default function Newfeed(username) {
+export default function Newfeed({socket, username}) {
     const [posts, setPosts] = useState([]);
     const { user } = useContext(Context);
 
@@ -25,13 +25,13 @@ export default function Newfeed(username) {
       }, [username, user._id]);
   return (
     <>
-      <Topbar />
+      <Topbar socket={socket}/>
       <div className="newfeedContainer">
-        <Sidebar />
+        <Sidebar socket={socket}/>
         <div className="bodyNewFeed">
           {posts.map((p) => {
               return (
-              <Post key={p._id} post={p} user1 = {user}  />
+              <Post key={p._id} post={p} user1 = {user} socket={socket} />
               )
           })}
         </div>

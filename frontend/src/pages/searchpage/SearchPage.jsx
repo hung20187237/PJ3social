@@ -12,7 +12,7 @@ import MultiSelectFloat from "../../components/FloatingLabel/MultiSelectFloat";
 import { Space } from "antd";
 import { useParams } from "react-router-dom";
 
-export default function SearchPage({ filter, data }) {
+export default function SearchPage({ filter, data, socket }) {
   const [filterValue, setFilterValue] = useState({ kv: [], tc: [], dm: [] });
   const [posts, setPosts] = useState([]);
   const [showPosts, setShowPosts] = useState([]);
@@ -105,14 +105,14 @@ export default function SearchPage({ filter, data }) {
     return (
       <div className="bodysearchFeed">
         {showPosts.map((p, index) => {
-          return <Post key={index} post={p} />;
+          return <Post key={index} post={p} socket={socket}/>;
         })}
       </div>
     );
   };
   return (
     <>
-      <Topbar />
+      <Topbar socket={socket}/>
       <div className="searchContainer">
         <SearchSidebar />
         <SearchFeed />

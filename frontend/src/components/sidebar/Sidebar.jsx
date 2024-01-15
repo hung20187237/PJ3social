@@ -4,7 +4,7 @@ import CloseFriend from "../closeFriend/CloseFriend";
 import axios from "axios";
 
 
-export default function Sidebar(username) {
+export default function Sidebar({username, socket}) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function Sidebar(username) {
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
           {users.slice(0, 5).map((u) => (
-            <CloseFriend key={u.id} user={u} />
+            <CloseFriend key={u.id} user={u} socket={socket}/>
           ))}
         </ul>
       </div>

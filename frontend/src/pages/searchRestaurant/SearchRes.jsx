@@ -28,7 +28,7 @@ import { GiCakeSlice } from "react-icons/gi";
 import PostRes from "./Component/Post";
 import ModalReview from "./Component/ModalReview";
 
-export default function SearchPost(username) {
+export default function SearchPost({username, socket}) {
   const [restaurant, setRestaurant] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [post, setPost] = useState([]);
@@ -164,9 +164,9 @@ export default function SearchPost(username) {
 
   return (
     <>
-      <Topbar />
+      <Topbar socket={socket}/>
       <div className="newfeedContainer">
-        <Sidebar />
+        <Sidebar socket={socket}/>
         <div className="bodyNewFeedRes">
             <div className="Place_resTop__1xCCM">
             <Flex>

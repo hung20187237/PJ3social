@@ -4,10 +4,10 @@ import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
 import "./Home.css"
 
-export default function Home() {
+export default function Home({socket}) {
   return (
     <>
-      <Topbar />
+      <Topbar socket={socket}/>
       <div className="homeContainer">
         <Feed/>
         <Rightbar/>

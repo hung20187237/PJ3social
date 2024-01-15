@@ -8,7 +8,7 @@ import axios from "axios";
 import { useParams } from "react-router";
 import Post from "../../components/post/Post";
 
-export default function Profile() {
+export default function Profile({socket}) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState();
   const username = useParams().username;
@@ -37,10 +37,10 @@ export default function Profile() {
 
   return (
     <>
-      <Topbar />
+      <Topbar socket={socket}/>
       {user?
       <div className="profile">
-        <Sidebar />
+        <Sidebar socket={socket}/>
         <div className="profileRight">
           <div className="profileRightTop">
             <div className="profileCover">
@@ -72,7 +72,7 @@ export default function Profile() {
           <div className="bodypostProfile">
             {posts.map((p) => {
                 return (
-                <Post key={p._id} post={p} user1 = {user} />
+                <Post key={p._id} post={p} user1 = {user} socket={socket}/>
                 )
             })}
           </div>

@@ -33,7 +33,7 @@ import {mildKeywords, moderateKeywords, severeKeywords} from "./contant";
 import axios from 'axios';
 
 
-export default function Review() {
+export default function Review({socket}) {
   const { user } = useContext(Context);
   const [form] = Form.useForm();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -208,7 +208,7 @@ export default function Review() {
 
   return (
       <div className="review">
-        <Topbar />
+        <Topbar socket={socket}/>
         <div className="reviewWrapper">
           <div className="headerReview">
             <span className="textContent">Viết Review</span>

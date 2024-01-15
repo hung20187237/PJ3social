@@ -11,7 +11,8 @@ import {AutoComplete, Button, Input, Modal} from "antd";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import {format} from "timeago.js";
 
-export default function Topbar(socket) {
+
+export default function Topbar({socket}) {
     const {user, dispatch} = useContext(Context);
     const [notificationAlert, setNotificationAlert] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -27,6 +28,7 @@ export default function Topbar(socket) {
     const [optionUser, setOptionUser] = useState([]);
     const scrollRef = useRef();
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
 
     let navigate = useNavigate();
 

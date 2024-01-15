@@ -24,7 +24,7 @@ import {ItemMore, PostTitle, postTitle, ReportContainer, TextAreaCustom} from ".
 import {FileExclamationOutlined} from "@ant-design/icons";
 import ReportModal from "./Component/ReportModal";
 
-export default function Post({ post, user1 }) {
+export default function Post({ post, user1, socket }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [currentPost, setCurrentPost] = useState(post);
   const [likes, setLikes] = useState(post.likes.length);
@@ -169,6 +169,14 @@ export default function Post({ post, user1 }) {
       axios.post("http://localhost:8800/api/notification", notify);
     } catch (err) {}
     dispatch({ type: "NOTIFICATION", payload: !notifyFlag });
+
+    socket.current?.emit("sendNotification", {
+      sendUserName: currentUser.username,
+      senduserId: currentUser._id,
+      receiveUserId: post.userId,
+      post: post.desc,
+      type:1
+    });
   };
 
   //xu ly khi comment bai dang
@@ -202,6 +210,13 @@ export default function Post({ post, user1 }) {
         type: 2,
       };
       axios.post("http://localhost:8800/api/notification", notify);
+      socket.current?.emit("sendNotification", {
+        sendUserName: currentUser.username,
+        sendUserId: currentUser._id,
+        receiveUserId: post.userId,
+        post: post.desc,
+        type:2
+      });
     } catch (err) {}
     dispatch({ type: "NOTIFICATION", payload: !notifyFlag });
   };
