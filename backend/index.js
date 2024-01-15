@@ -23,6 +23,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 const tf = require('@tensorflow/tfjs');
 const Post = require("./models/Post");
+const Comment = require("./models/Comment");
 
 const modelFilePath = 'linear_regression_model';
 
@@ -200,8 +201,10 @@ const calculateAverage = obj => {
   return count === 0 ? 0 : sum / count;
 };
 trainModel().then(() => {
-  const posts = Post.find();
-  const comments = Comment.find();
+  const postTable = Post.find();
+  const commentTable = Comment.find();
+  const posts = [];
+  const comments = [];
   const combinedArray = posts.map(post => ({
     ...post,
     comments: comments.filter(comment => comment.postId === post._id),

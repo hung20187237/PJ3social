@@ -1,8 +1,9 @@
-import { useContext, useRef } from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import "./Login.css";
 import { Context } from "../../context/Context";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {message} from "antd";
 
 export default function Login() {
 
@@ -11,6 +12,22 @@ export default function Login() {
     const email = useRef();
     const password = useRef();
     const { dispatch } = useContext(Context);
+    const [messageLogin, setMessageLogin] = useState('');
+    const [messageApi, contextHolder] = message.useMessage();
+    const success = () => {
+        messageApi.open({
+            type: 'error',
+            content: messageLogin,
+        });
+    };
+
+    useEffect(() => {
+        if (messageLogin !== '') {
+            success()
+            setMessageLogin('')
+        }
+
+    }, [messageLogin]);
 
     const handleClickLogin = async (e) => {
         e.preventDefault();
@@ -21,7 +38,7 @@ export default function Login() {
             navigate('/')
         } 
         catch(err){
-            console.log(err)
+            setMessageLogin(err.response.data)
         }
     };
 
@@ -32,6 +49,7 @@ export default function Login() {
   return (
     
     <div className="login">
+        {contextHolder}
       <div className="loginWrapper">
         <div className="loginLeft">
           <h3 className="loginLogo">AplusReviewFood</h3>

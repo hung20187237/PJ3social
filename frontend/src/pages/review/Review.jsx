@@ -56,41 +56,70 @@ export default function Review() {
   const submitHandler = async (e) => {
     e.preventDefault();
     const value = await form.validateFields();
-    const resultDesc = checkCommunityStandards(desc.current.getContent());
-    const newPost = {
-      userId: user._id,
-      desc: resultDesc === 0 ? desc.current.getContent() : '',
-      title: value.name.trim(),
-      rating: rating.current,
-      place: value.place,
-      tagkv: filterValue.kv,
-      tagtc: filterValue.tc,
-      tagdm: filterValue.dm,
-    };
-    if (mutifile) {
-      const data = new FormData();
-      let fileName = [];
-      [...mutifile].map((file) => data.append("images", file));
+    const post = desc.current.getContent()
+    const resultDesc = await handleContentUpload(post).then(r => {
+      console.log(r)
+      console.log(checkKeywordLevel(post, severeKeywords))
+      console.log(checkKeywordLevel(post, moderateKeywords))
+      console.log(checkKeywordLevel(post, mildKeywords))
+      if (r) {
+        if (checkKeywordLevel(post, severeKeywords)) {
+          console.log('a')
+          return "Bài viết chứa từ khóa lạm dụng nghiêm trọng.";
+        } else if (checkKeywordLevel(post, moderateKeywords)) {
+          console.log('b')
+          return "Bài viết chứa từ khóa lạm dụng mức độ vừa.";
+        } else if (checkKeywordLevel(post, mildKeywords)) {
+          console.log('c')
+          return "Bài viết chứa từ khóa lạm dụng nhẹ.";
+        }
+        else {
+          console.log('d')
+          return 0;
+        }
+      }else {
+        return "Bài viết vi phạm tiêu chuẩn cộng đồng.";
+      }
+    })
+    console.log('resultDesc', resultDesc)
+    if (resultDesc === 0) {
+      const newPost = {
+        userId: user._id,
+        desc: resultDesc === 0 ? desc.current.getContent() : '',
+        title: value.name.trim(),
+        rating: rating.current,
+        place: value.place,
+        tagkv: filterValue.kv,
+        tagtc: filterValue.tc,
+        tagdm: filterValue.dm,
+      };
+      if (mutifile) {
+        const data = new FormData();
+        let fileName = [];
+        [...mutifile].map((file) => data.append("images", file));
+        try {
+          await axios
+              .post("http://localhost:8800/api/mutiupload", data)
+              .then((res) => res.data)
+              .then((data) =>
+                  data.file.map((file) => fileName.push(file.filename))
+              );
+          newPost.img = Object.values(fileName);
+        } catch (err) {}
+      }
+      const newRes = {
+        name: newPost.title,
+        places: newPost.place,
+      };
       try {
-        await axios
-            .post("http://localhost:8800/api/mutiupload", data)
-            .then((res) => res.data)
-            .then((data) =>
-                data.file.map((file) => fileName.push(file.filename))
-            );
-        newPost.img = Object.values(fileName);
+        console.log(newRes)
+        await axios.post("http://localhost:8800/api/post", newPost);
+        // await axios.post("http://localhost:8800/api/restaurant", newRes);
+        // window.location.reload();
       } catch (err) {}
+    }else {
+      setIsModalTextOpen(true)
     }
-    const newRes = {
-      name: newPost.title,
-      places: newPost.place,
-    };
-    try {
-      console.log(newRes)
-      await axios.post("http://localhost:8800/api/post", newPost);
-      await axios.post("http://localhost:8800/api/restaurant", newRes);
-      window.location.reload();
-    } catch (err) {}
   };
 
   const checkAllActionsAccept = (array) => {
@@ -130,18 +159,6 @@ export default function Review() {
   }
 
 
-  const handleClick = async (content) => {
-    if (content) {
-      try {
-        const response = await axios.post("http://localhost:8800/api/translate", {content})
-        console.log(response)
-      } catch (err) {
-        console.error(err.message);
-      }
-    }
-  }
-
-
   const MutipleFileChange = (files) => {
     const listImg = Object.values(files);
     const listUrl = listImg.map((img) => URL.createObjectURL(img));
@@ -150,23 +167,30 @@ export default function Review() {
     setMutiupload(listUrl);
   };
 
-  function checkCommunityStandards(post) {
-    function checkKeywordLevel(content, keywords) {
-      return keywords.some(keyword => content.includes(keyword));
-    }
+  function checkKeywordLevel(content, keywords) {
+    return keywords.some(keyword => content.includes(keyword));
+  }
+  const checkCommunityStandards = async (post) => {
     handleContentUpload(post).then(r => {
       console.log(r)
+      console.log(checkKeywordLevel(post, severeKeywords))
+      console.log(checkKeywordLevel(post, moderateKeywords))
+      console.log(checkKeywordLevel(post, mildKeywords))
       if (r) {
-        // Kiểm tra từ khóa lạm dụng Tieng viet
         if (checkKeywordLevel(post, severeKeywords)) {
+          console.log('a')
           return "Bài viết chứa từ khóa lạm dụng nghiêm trọng.";
         } else if (checkKeywordLevel(post, moderateKeywords)) {
+          console.log('b')
           return "Bài viết chứa từ khóa lạm dụng mức độ vừa.";
         } else if (checkKeywordLevel(post, mildKeywords)) {
+          console.log('c')
           return "Bài viết chứa từ khóa lạm dụng nhẹ.";
         }
-        return 0;
-
+        else {
+          console.log('d')
+          return 0;
+        }
       }else {
         return "Bài viết vi phạm tiêu chuẩn cộng đồng.";
       }
