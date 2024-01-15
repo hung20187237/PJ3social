@@ -5,21 +5,27 @@ const io = require("socket.io")(8900, {
   });
   
   let users = [];
-  
-  const addUser = (userId, socketId) => {
-    !users.some((user) => user.userId === userId) &&
-      users.push({ userId, socketId });
-  };
-  
-  const removeUser = (socketId) => {
-    users = users.filter((user) => user.socketId !== socketId);
-  };
-  
-  const getUser = (userId) => {
-    return users.find((user) => user.userId === userId);
-  };
-  
-  io.on("connection", (socket) => {
+
+const addUser = (userId, socketId) => {
+  if(users.some((user) => user.userId === userId)){
+    users = users.filter((user)=> user.userId !== userId)
+    users.push({ userId, socketId })
+  }
+  else{
+    users.push({ userId, socketId });
+  }
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
+
+io.on("connection", (socket) => {
     //when ceonnect
     console.log("a user connected.");
   
@@ -37,6 +43,19 @@ const io = require("socket.io")(8900, {
         text,
       });
     });
+
+  socket.on("sendNotification", ({ sendUserName, sendUserId, receiveUserId, type, post }) => {
+    const receiver = getUser(receiveUserId);
+    if(receiver){
+      io.to(receiver.socketId).emit("getNotification", {
+        sendUserId,
+        sendUserName,
+        receiveUserId,
+        type,
+        post,
+        timestamp: new Date()
+      })}
+  });
   
     //when disconnect
     socket.on("disconnect", () => {
