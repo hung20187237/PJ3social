@@ -144,37 +144,50 @@ router.get("/followings/:id", async (req, res) => {
 // save a post
 router.put("/:id/save", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user.savedposts.includes(req.body.postId)) {
-      await user.updateOne({ $push: { savedposts: req.body.postId} });
-      res.status(200).json("The post has been saved");
-    } else {
-      await user.updateOne({ $pull: { savedposts: req.body.postId} });
-      res.status(200).json("The post has been unsaved");
+    const userId = req.params.id;
+    const postId = req.body.postId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
+    const isPostSaved = user.savedposts.includes(postId);
+    let message = "";
+    await User.findOneAndUpdate(
+        { _id: userId },
+        isPostSaved
+            ? { $pull: { savedposts: postId } }
+            : { $push: { savedposts: postId } },
+        { new: true } // Trả về bản ghi sau khi cập nhật
+    );
+    message = isPostSaved ? "The post has been unsaved" : "The post has been saved";
+    res.status(200).json({ message });
   } catch (err) {
-    res.status(500).json(err);
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
 //get save post
 router.get("/savepost/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    const savedposts = await Promise.all(
-      user.savedposts.map((savepostId) => {
-        return Post.findById(savepostId);
-      })
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const savedPostIds = user.savedposts;
+
+    const savedPosts = await Promise.all(
+        savedPostIds.map(async (postId) => {
+          const post = await Post.findById(postId);
+          return post ? post.toObject() : null; // Chuyển đổi sang plain JavaScript object
+        })
     );
-    let postList = [];
-    savedposts.map((post) => {
-      const { _id, img, title, place, rating } = post;
-      postList.push({ _id, img, title, place, rating });
-    });
-    
-    res.status(200).json(postList)
+
+    res.status(200).json(savedPosts.filter(post => post !== null)); // Lọc bỏ bài đăng null (nếu có)
   } catch (err) {
-    res.status(500).json(err);
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

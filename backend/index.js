@@ -24,8 +24,7 @@ const fs = require('fs');
 const tf = require('@tensorflow/tfjs');
 const Post = require("./models/Post");
 const Comment = require("./models/Comment");
-
-const modelFilePath = 'linear_regression_model';
+const { Types } = require('mongoose');
 
 
 dotenv.config();
@@ -131,6 +130,7 @@ app.post('/api/check-content', async (req, res) => {
 });
 
 
+let raking = [];
 const xs = tf.tensor2d([
   [100, 20, 4.5],
   [150, 25, 3.5],
@@ -200,30 +200,31 @@ const calculateAverage = obj => {
   }
   return count === 0 ? 0 : sum / count;
 };
-trainModel().then(() => {
-  const postTable = Post.find();
-  const commentTable = Comment.find();
-  const posts = [];
-  const comments = [];
+trainModel().then( async () => {
+  const posts = await Post.find().exec();
+  const comments = await Comment.find().exec();
   const combinedArray = posts.map(post => ({
-    ...post,
-    comments: comments.filter(comment => comment.postId === post._id),
+    ...post.toObject(),
+    comments: comments.filter(comment => Types.ObjectId(comment.postId).equals(post._id)),
   }));
-  console.log('combinedArray', combinedArray)
 
   const newPredictions = combinedArray.map(data => {
-    const input = tf.tensor2d([data.likes.length, calculateAverage(data.rating), data.comments.length]);
+    const input = tf.tensor2d([[data.likes.length, calculateAverage(data.rating), data.comments.length]]);
     const prediction = model.predict(input);
-    return prediction.dataSync()[0].toFixed(2);
+    return { ...data, prediction: prediction.dataSync()[0].toFixed(2) };
   });
-  console.log('newPredictions', newPredictions)
-  
-  const newLikes = 120;
-  const newComments = 25;
-  const newRating = 4.2
-  const prediction = model.predict(tf.tensor2d([[newLikes, newComments, newRating]]));
-  console.log('prediction', prediction.dataSync()[0])
+  raking = newPredictions;
 });
+
+app.get('/api/top-posts', async (req, res) => {
+  try {
+    res.json(raking.sort((a, b) => b.prediction - a.prediction).slice(0, 5));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 // socket
