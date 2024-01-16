@@ -53,15 +53,25 @@ export default function Rightbar({ user, username }) {
     const fetchPosts = async () => {
       const res = username
         ? await axios.get("http://localhost:8800/api/post/profile/" + username)
-        : await axios.get("http://localhost:8800/api/post/timeline/" + currentUser._id);
-      setPosts(
-        res.data.sort((p1, p2) => {
-          return (p2.likes.length)-(p1.likes.length);
-        })
-      );
+        : await axios.get("http://localhost:8800/api/top-posts");
+      setPosts(res.data);
     };
     fetchPosts();
-  }, [username, currentUser._id]);
+  }, [username]);
+
+  useEffect(() => {
+    const getRankingPost = async () => {
+      try {
+        const res = await axios.get(
+            "http://localhost:8800/api/top-posts"
+        );
+        setNotifications()
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getRankingPost();
+  }, []);
 
 
 

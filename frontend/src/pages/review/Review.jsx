@@ -114,8 +114,8 @@ export default function Review({socket}) {
       try {
         console.log(newRes)
         await axios.post("http://localhost:8800/api/post", newPost);
-        // await axios.post("http://localhost:8800/api/restaurant", newRes);
-        // window.location.reload();
+        await axios.post("http://localhost:8800/api/restaurant", newRes);
+        window.location.reload();
       } catch (err) {}
     }else {
       setIsModalTextOpen(true)

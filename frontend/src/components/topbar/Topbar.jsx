@@ -54,6 +54,7 @@ export default function Topbar({socket}) {
         getNotifications();
     }, []);
 
+
     useEffect(() => {
         socket.current?.on("getNotification", (data) => {
             console.log(data);
